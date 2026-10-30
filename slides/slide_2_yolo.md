@@ -3,7 +3,7 @@ What is YOLO?
 
 - "You Only Look Once": finds objects in an image in a single pass
   of a neural network, fast enough for live video
-- First published in 2016 (Redmon et al.); Ultralytics maintains
+- Introduced in 2015 by Redmon et al.; Ultralytics maintains
   today's versions, YOLO11 in this talk
 - Tasks: detect, segment, classify, track, and pose
 
