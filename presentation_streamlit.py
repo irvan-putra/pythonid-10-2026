@@ -5,7 +5,6 @@ def start():
     subprocess.Popen([sys.executable, "-m", "streamlit", "run", __file__])
 
 if __name__ == "__main__":
-    st.title("📊 Live Edge AI Voting Dashboard")
     read = st.cache_data(ttl=1)(presentation_redis.read)
 
     @st.fragment(run_every=1)
@@ -18,8 +17,8 @@ if __name__ == "__main__":
         history["time"] = pd.to_datetime(history["time"], unit="s")
         approval = latest["hands"] / max(latest["people"], 1)
         c1, c2, c3 = st.columns(3)
-        c1.metric("👥 People", latest["people"], f"record {history.people.max()}", delta_color="off")
-        c2.metric("✋ Votes", latest["hands"], f"record {history.hands.max()}", delta_color="off")
+        c1.metric("👥 People", latest["people"], f"record {history.people.max()}")
+        c2.metric("✋ Votes", latest["hands"], f"record {history.hands.max()}")
         c3.metric("👍 Approval", f"{approval:.0%}")
         st.area_chart(history.set_index("time")[["people", "hands"]], x_label="Time", y_label="Energy")
         cloud = WordCloud(width=800, height=300, background_color="white")
