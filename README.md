@@ -10,8 +10,10 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
 
 | Slide | File | What it shows |
 |---|---|---|
-| 0 | `slides/slide_0_bio.md` | About the speaker |
-| 0 | `slides/slide_0_tkinter.md` | What is Tkinter? |
+| 0 | `slides/slide_0_1_bio.md` | About the speaker |
+| 0 | `slides/slide_0_2_agenda.md` | The four parts of the talk |
+| 0 | `slides/slide_0_3_demos.md` | Three demos, three study programs (TI, SI, SK) |
+| 0 | `slides/slide_0_4_tkinter.md` | What is Tkinter? |
 | 0 | `presentation.py` | The presentation engine itself |
 | 1 | `slides/slide_1_whisper.md` | What is Whisper? |
 | 1 | `slides/slide_1_whisper.py` | Laptop mic → `faster-whisper` (`tiny.en`, `int8`) → say **"next"** / **"back"** to change slides, with a live subtitle |
@@ -38,6 +40,13 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
 | 14 | `slides/slide_14_publish.py` | Wraps Whisper's `show()` and YOLO's `update()` to also publish the transcript and votes, to the laptop's broker and to the public `broker.hivemq.com` |
 | 15 | `slides/slide_15_subscribe.py` | The dashboard's MQTT subscriber on the public broker: keeps one row of votes per second for 10 minutes (Jakarta time), and the transcript |
 | 16 | `slides/slide_16_dashboard.py` | The Streamlit dashboard: hosted on Streamlit Community Cloud for the audience, and started by the presentation on the laptop with `--local` |
+| 17 | `slides/slide_17_architecture.md` | What we just built: the whole pipeline |
+| 18 | `slides/slide_18_community.md` | How community built our research team |
+| 19 | `slides/slide_19_research_group.md` | A cross-border research group, and the takeaway |
+| 20 | `slides/slide_20_edgeprompt.md` | EdgePrompt: guardrails for LLMs in K-12 education |
+| 21 | `slides/slide_21_fitrag.md` | FitRAG: RAG that learns from feedback |
+| 22 | `slides/slide_22_toolkit.md` | Free tools to start building today |
+| 23 | `slides/slide_23_thanks.md` | Thanks, questions and links |
 
 ```
                                   laptop: Mosquitto                 internet: broker.hivemq.com
