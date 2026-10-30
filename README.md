@@ -18,6 +18,7 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
 | 2 | `slides/slide_2_yolo.py` | Laptop webcam → YOLO11 pose (`yolo11n-pose.pt`) → people and raised-hand count |
 | 3 | `slides/slide_3_coco.png` | The COCO pose keypoints, and how a raised hand is detected |
 | 4 | `slides/slide_4_mqtt.md` | What is MQTT? |
+| 4 | `slides/slide_4_mqtt_vs_coap.md` | MQTT vs CoAP: two ways to talk IoT |
 | 4 | `slides/slide_4_broker.py` | The "Waiting for phone..." line: the laptop runs a local [Mosquitto](https://mosquitto.org/download/) MQTT broker, started with the presentation and stopped when the window closes |
 | 5 | `slides/slide_5_mosquitto.conf` | The broker config that lets the phone on the same Wi-Fi connect |
 | 6 | `slides/slide_6_mqtt.py` | MQTT helpers (`listen`, `publish`) and the sensor LED: shaking the phone turns it red |
