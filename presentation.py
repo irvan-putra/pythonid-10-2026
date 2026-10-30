@@ -1,7 +1,8 @@
 import sys, pathlib, importlib, tkinter as tk
 
-sys.path.insert(0, "slides")  # one file per slide, shown in name order
-files = sorted(pathlib.Path("slides").glob("slide_*"))  # .py, plus the .conf and .html they use
+sys.path.insert(0, "slides")
+number = lambda path: int(path.name.split("_")[1])  # so slide_10 comes after slide_9
+files = sorted(pathlib.Path("slides").glob("slide_*"), key=number)
 slides = [("presentation.py", open(__file__, encoding="utf-8").read())]
 slides += [(f"slides/{path.name}", path.read_text(encoding="utf-8")) for path in files]
 slide = 0
@@ -22,7 +23,7 @@ def go(step=0):
     label.config(text=slides[slide][1])
 
 modules = [importlib.import_module(path.stem) for path in files if path.suffix == ".py"]
-for module in modules:  # import all first, then each slide starts its part of the demo
+for module in modules:  # all imported first: later slides patch earlier ones when imported
     if hasattr(module, "start"):
         module.start(panel, go)
 label.pack(side="left", expand=True, fill="both", padx=10)  # last: fills the space left over

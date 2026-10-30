@@ -1,7 +1,7 @@
 import sys, json, subprocess, paho.mqtt.client as mqtt
 
 # Runs on the phone (Termux): python slide_6_termux.py <laptop-ip>
-if __name__ == "__main__":  # run on the phone; the presentation only shows this file
+if __name__ == "__main__":
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     client.connect(sys.argv[1])
     client.loop_start()

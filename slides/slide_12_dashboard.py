@@ -10,8 +10,8 @@ def live():
     data = {"history": collections.deque(maxlen=60 * 10), "text": "", "last": 0}  # 10 minutes
     def on_message(client, userdata, msg):
         if msg.topic == "pythonid/speech":
-            data["text"] = json.loads(msg.payload)  # the whole transcript so far
-        elif time.time() - data["last"] >= 1:  # YOLO sends every frame: keep 1 row per second
+            data["text"] = json.loads(msg.payload)
+        elif time.time() - data["last"] >= 1:  # votes come every frame: keep 1 row per second
             data["last"] = time.time()
             data["history"].append({"time": data["last"], **json.loads(msg.payload)})
     mqtt.listen(["votes", "speech"], on_message)

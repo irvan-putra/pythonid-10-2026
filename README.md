@@ -4,7 +4,9 @@ A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **F
 
 ## Slides
 
-`presentation.py` shows its own source code first, then every `slide_*` file in [`slides/`](slides/) in name order, with the current file name above the camera. Each slide module that has a `start(panel, go)` function adds its part of the live demo.
+`presentation.py` shows its own source code first, then every `slide_*` file in [`slides/`](slides/) in slide-number order, with the current file name above the camera. It imports every slide module first, then calls each one's `start(panel, go)`.
+
+Slides 1 and 2 are plain laptop code. Later slides extend them by replacing their functions and objects when imported (monkeypatching), so each new idea lives in its own slide.
 
 | Slide | File | What it shows |
 |---|---|---|
@@ -15,9 +17,12 @@ A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **F
 | 4 | `slides/slide_4_mosquitto.conf` | The broker config that lets the phone on the same Wi-Fi connect |
 | 5 | `slides/slide_5_mqtt.py` | MQTT helpers (`listen`, `publish`) and the sensor LED: shaking the phone turns it red |
 | 6 | `slides/slide_6_termux.py` | Runs on the phone in Termux and publishes its accelerometer to the broker |
-| 7 | `slides/slide_7_sensor.py` | The phone's camera and mic replace the laptop's, over WebSockets (FastAPI on port 8000) |
-| 8 | `slides/slide_8_sensor.html` | The page the phone opens to stream its camera and mic |
-| 9 | `slides/slide_9_dashboard.py` | The local Streamlit dashboard with all the live data |
+| 7 | `slides/slide_7_sensor.py` | A FastAPI server on port 8000 that serves the phone page |
+| 8 | `slides/slide_8_sensor.html` | The page the phone opens to stream its camera and mic over WebSockets |
+| 9 | `slides/slide_9_phone_mic.py` | Receives the phone mic and replaces Whisper's `record()`: the phone mic while it's connected, else the laptop mic |
+| 10 | `slides/slide_10_phone_camera.py` | Receives the phone camera and replaces YOLO's `webcam` with a `PhoneCamera` that has the same `isOpened()` / `read()` |
+| 11 | `slides/slide_11_publish.py` | Wraps Whisper's `show()` and YOLO's `update()` to also publish the transcript and votes to MQTT |
+| 12 | `slides/slide_12_dashboard.py` | The local Streamlit dashboard with all the live data |
 
 ```
 Laptop or phone camera ──► YOLO ──► pythonid/votes  ──► Streamlit dashboard (1 row per second)
@@ -66,8 +71,8 @@ Phone accelerometer (Termux) ─────► pythonid/sensor ──► sensor
    ```bash
    python slide_6_termux.py <laptop-ip>
    ```
-4. **Slides 7–8 (phone camera and mic):** on the phone, open `http://<laptop-ip>:8000` in Chrome, tap **📷🎙 Start**, and allow the camera and microphone. While it streams, YOLO uses the phone camera and Whisper uses the phone mic (the subtitle shows 📱); when the phone stops, both go back to the laptop's.
-5. **Slide 9 (dashboard):** the audience opens the **Network URL** on their phones, on the same Wi-Fi.
+4. **Slides 7–10 (phone camera and mic):** on the phone, open `http://<laptop-ip>:8000` in Chrome, tap **📷🎙 Start**, and allow the camera and microphone. While it streams, YOLO uses the phone camera and Whisper uses the phone mic; when the phone stops, both go back to the laptop's.
+5. **Slides 11–12 (dashboard):** the audience opens the **Network URL** on their phones, on the same Wi-Fi.
 6. To stop, close the slides window (this also stops Mosquitto and the phone server), then press **Ctrl+C** in the terminal to stop the dashboard.
 
 ### Controls
@@ -79,7 +84,7 @@ Phone accelerometer (Termux) ─────► pythonid/sensor ──► sensor
 
 ## 📊 Live Dashboard
 
-The dashboard (`slides/slide_9_dashboard.py`) shows:
+The dashboard (`slides/slide_12_dashboard.py`) shows:
 
 - **People / Votes** with the record so far, and **Approval** (hands ÷ people) as a percentage
 - **Energy** area chart of people and hands over the last 10 minutes, shared by every viewer

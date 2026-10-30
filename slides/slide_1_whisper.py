@@ -1,23 +1,19 @@
-import queue, threading, tkinter as tk, sounddevice as sd, slide_5_mqtt as mqtt
+import threading, tkinter as tk, sounddevice as sd
 from faster_whisper import WhisperModel
 
-phone = queue.Queue()  # 2-second chunks from the phone mic (slide_7_sensor.py)
+def record():  # 2 seconds at 16 kHz
+    return sd.rec(32000, samplerate=16000, channels=1, dtype="float32", blocking=True).flatten()
+
+def show(subtitle, text):
+    subtitle.config(text=f"🎙 {text}")
 
 def listen(root, go, subtitle):
-    model, transcript, from_phone = WhisperModel("tiny.en", compute_type="int8"), "", False
+    model = WhisperModel("tiny.en", compute_type="int8")
     while True:
-        try:  # the phone mic takes over while it streams, then the laptop mic again
-            audio, from_phone = phone.get(timeout=3 if from_phone else 0.01), True
-        except queue.Empty:  # 2 seconds from the laptop mic
-            from_phone = False
-            audio = sd.rec(32000, samplerate=16000, channels=1, dtype="float32", blocking=True)
-        segments, _ = model.transcribe(audio.flatten(), vad_filter=True)
+        segments, _ = model.transcribe(record(), vad_filter=True)
         text = " ".join(segment.text.strip() for segment in segments)
         if text:
-            transcript += " " + text  # retained: a dashboard opened later still gets all of it
-            mqtt.publish("speech", transcript, retain=True)
-            line = f"{'📱' if from_phone else '🎙'} {text}"
-            root.after(0, lambda line=line: subtitle.config(text=line))
+            root.after(0, show, subtitle, text)
         if "next" in text.lower():
             root.after(0, go, 1)
         elif "back" in text.lower():

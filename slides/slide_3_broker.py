@@ -1,12 +1,11 @@
 import atexit, pathlib, shutil, subprocess
 
-# Local Mosquitto MQTT broker; slide_4_mosquitto.conf lets the phone on the same Wi-Fi connect
 MOSQUITTO = shutil.which("mosquitto") or r"C:\Program Files\mosquitto\mosquitto.exe"
 CONFIG = pathlib.Path(__file__).with_name("slide_4_mosquitto.conf")
 
 def start(root, go):
     try:
         broker = subprocess.Popen([MOSQUITTO, "-c", str(CONFIG)])
-        atexit.register(broker.terminate)  # stop the broker when the presentation closes
+        atexit.register(broker.terminate)
     except FileNotFoundError:
         print("Mosquitto not found: install it from https://mosquitto.org/download/", flush=True)

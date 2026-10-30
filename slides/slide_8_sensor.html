@@ -6,7 +6,7 @@
 <p id="state" style="color: gray"></p>
 <video id="video" playsinline muted style="width: 100%"></video>
 <script>
-const protocol = location.protocol === "https:" ? "wss" : "ws";  // secure page -> secure socket
+const protocol = location.protocol === "https:" ? "wss" : "ws";
 const socket = (path) => new WebSocket(`${protocol}://${location.host}/${path}`);
 
 async function streamCamera(stream) {
