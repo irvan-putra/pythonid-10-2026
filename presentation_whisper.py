@@ -8,7 +8,6 @@ def listen(root, go, sub):
         segs, _ = model.transcribe(audio.flatten(), vad_filter=True)
         text = " ".join(s.text.strip() for s in segs)
         if text:
-            print(text, flush=True)
             presentation_redis.words.update(re.findall(r"[a-z']{4,}", text.lower()))
             root.after(0, lambda t=text: sub.config(text=f"🎙 {t}"))
         if "next" in text.lower():
