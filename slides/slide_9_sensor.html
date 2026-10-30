@@ -14,10 +14,10 @@ const socket = (path) => new WebSocket(`${protocol}://${location.host}/${path}`)
 
 start.onclick = async () => {
   try {
-    const ctx = new AudioContext({ sampleRate: 16000 });
+    const actx = new AudioContext({ sampleRate: 16000 });
     const backCamera = { facingMode: "environment", width: 640 };
     const stream = await navigator.mediaDevices.getUserMedia({ video: backCamera, audio: true });
-    streamMic(stream, ctx);
+    streamMic(stream, actx);
     await streamCamera(stream);
     start.disabled = true;
   } catch (error) {
