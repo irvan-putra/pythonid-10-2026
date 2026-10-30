@@ -1,4 +1,4 @@
-import threading, tkinter as tk, sounddevice as sd
+import re, threading, tkinter as tk, sounddevice as sd, presentation_redis
 from faster_whisper import WhisperModel
 
 def listen(root, go, sub):
@@ -9,6 +9,7 @@ def listen(root, go, sub):
         text = " ".join(s.text.strip() for s in segs)
         if text:
             print(text, flush=True)
+            presentation_redis.words.update(re.findall(r"[a-z']{4,}", text.lower()))
             root.after(0, lambda t=text: sub.config(text=f"🎙 {t}"))
         if "next" in text.lower():
             root.after(0, go, 1)

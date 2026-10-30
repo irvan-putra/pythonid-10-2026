@@ -1,20 +1,32 @@
 import os, json, time, urllib.request
+from collections import Counter
 
 URL, TOKEN = os.environ.get("UPSTASH_REDIS_REST_URL"), os.environ.get("UPSTASH_REDIS_REST_TOKEN")
-last_push = 0
+live, words, last_push = {"slide": 0, "slides": {}}, Counter(), 0
 
-def redis(cmd):
-    req = urllib.request.Request(f"{URL}/{cmd}", headers={"Authorization": f"Bearer {TOKEN}"})
-    return json.load(urllib.request.urlopen(req, timeout=2))["result"]
+def redis(*cmds):
+    req = urllib.request.Request(f"{URL}/pipeline", json.dumps(cmds).encode(), {"Authorization": f"Bearer {TOKEN}"})
+    return [r["result"] for r in json.load(urllib.request.urlopen(req, timeout=2))]
 
-def push(people, hands):
+def push(people):
     global last_push
-    if URL and time.time() - last_push > 1:
-        last_push = time.time()
-        try:
-            redis(f"set/votes/{people},{hands}")
-        except Exception as e:
-            print("push failed:", e, flush=True)
+    if time.time() - last_push < 1:
+        return
+    last_push, xs = time.time(), [x for x, l, r in people if l or r]
+    row = json.dumps({"t": last_push, "slide": live["slide"], "people": len(people), "hands": len(xs),
+                      "left": sum(p[1] for p in people), "right": sum(p[2] for p in people)})
+    live["slides"][live["slide"]] = max(live["slides"].get(live["slide"], 0), len(xs))
+    now = json.dumps({**live, "xs": xs, "words": words.most_common(15)})
+    try:
+        if URL:
+            redis(["LPUSH", "history", row], ["LTRIM", "history", "0", "599"], ["SET", "live", now])
+        else:
+            open("votes.txt", "a").write(row + "\n"), open("live.json", "w").write(now)
+    except Exception as e:
+        print("push failed:", e, flush=True)
 
 def read():
-    return redis("get/votes") if URL else open("votes.txt").read()
+    if URL:
+        rows, now = redis(["LRANGE", "history", "0", "599"], ["GET", "live"])
+        return [json.loads(r) for r in rows[::-1]], json.loads(now)
+    return [json.loads(r) for r in open("votes.txt").readlines()[-600:]], json.load(open("live.json"))

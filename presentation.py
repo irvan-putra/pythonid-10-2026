@@ -1,5 +1,5 @@
 import tkinter as tk
-import presentation_whisper, presentation_yolo, presentation_streamlit
+import presentation_whisper, presentation_yolo, presentation_streamlit, presentation_redis
 
 slides = [
     "Edge AI & Multimodal Applications in Python",
@@ -19,7 +19,7 @@ lbl.pack(side="left", expand=True)
 
 def go(step=0):
     global i
-    i = (i + step) % len(slides)
+    i = presentation_redis.live["slide"] = (i + step) % len(slides)
     lbl.config(text=slides[i])
 
 presentation_whisper.start(root, go)

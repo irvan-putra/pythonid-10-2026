@@ -1,24 +1,34 @@
-import subprocess, sys, streamlit as st, presentation_redis
+import subprocess, sys, pandas as pd, streamlit as st, presentation_redis
 
 def start():
     subprocess.Popen([sys.executable, "-m", "streamlit", "run", __file__])
 
 if __name__ == "__main__":
     st.title("📊 Live Edge AI Voting Dashboard")
-    st.session_state.setdefault("history", [])
     read = st.cache_data(ttl=1)(presentation_redis.read)
 
     @st.fragment(run_every=1)
     def live_charts():
         try:
-            people, hands = map(int, read().split(","))
+            rows, live = read()
+            df, now = pd.DataFrame(rows), rows[-1]
         except Exception:
-            people, hands = 0, 0
-        st.session_state.history.append({"People": people, "Votes (Hands)": hands})
-        c1, c2 = st.columns(2)
-        c1.metric("👥 People", people)
-        c2.metric("✋ Votes (Hands Up)", hands)
-        st.bar_chart({"People": people, "Votes (Hands)": hands})
-        st.line_chart(st.session_state.history[-30:])
+            return st.info("⏳ Waiting for votes...")
+        slide = df[df.slide == now["slide"]]
+        df.t, approval = pd.to_datetime(df.t, unit="s"), now["hands"] / max(now["people"], 1)
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("👥 People", now["people"], f"record {df.people.max()}", delta_color="off")
+        c2.metric("✋ Votes", now["hands"], f"record {df.hands.max()}", delta_color="off")
+        c3.metric("👍 Approval", f"{approval:.0%}")
+        c4.metric("⏱ Reaction", f"{slide.t[slide.hands.idxmax()] - slide.t.min():.0f}s")
+        st.progress(min(approval, 1.0))
+        st.area_chart(df.set_index("t")[["people", "hands"]], x_label="Time", y_label="Energy")
+        a, b = st.columns(2)
+        a.bar_chart(pd.DataFrame([{"✋ Up": now["hands"], "🙅 Down": now["people"] - now["hands"]}], index=["Room"]), horizontal=True)
+        b.bar_chart({"⬅ Left hand": now["left"], "Right hand ➡": now["right"]}, y_label="Hands", sort=False)
+        a.bar_chart(pd.Series(live["slides"], dtype=int), x_label="Slide", y_label="Most hands")
+        zones = pd.cut(pd.Series(live["xs"], dtype=float), [0, 1 / 3, 2 / 3, 1], labels=["⬅ Left", "Center", "Right ➡"], include_lowest=True)
+        b.bar_chart(zones.value_counts().sort_index(), x_label="Room zone (camera view)", y_label="Hands", sort=False)
+        st.bar_chart(pd.Series(dict(live["words"]), dtype=int), horizontal=True, x_label="Times spoken", sort=False)
 
     live_charts()

@@ -7,12 +7,18 @@ A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **F
 1. **`presentation.py`** — Main Tkinter presentation engine (loads its own source code on Slide 1 and chains the remaining slides).
 2. **`presentation_whisper.py`** — Live voice slide navigation (`"next"` / `"back"`) and subtitle transcription using `faster-whisper` (`tiny.en`, `int8`) and `sounddevice`.
 3. **`presentation_yolo.py`** — Live webcam people & 17-keypoint pose estimation (`yolo11n-pose.pt`) with raised-hand vote counting.
-4. **`presentation_streamlit.py`** — Real-time Streamlit audience voting dashboard (`@st.fragment(run_every=1)`) displaying live people & raised-hand vote charts.
-5. **`presentation_redis.py`** — Tiny Upstash Redis REST relay (`push` / `read`) that sends live votes from the laptop to the deployed dashboard.
+4. **`presentation_streamlit.py`** — Real-time Streamlit audience voting dashboard (`@st.fragment(run_every=1)`) displaying live audience charts (see below).
+5. **`presentation_redis.py`** — Tiny Upstash Redis REST relay (`push` / `read`) that sends live votes, slide number and spoken words from the laptop to the deployed dashboard.
 
 ## 🌐 Live Dashboard
 
-The Streamlit voting dashboard is deployed at **https://pythonid-10-2026.streamlit.app** so the audience can follow the votes on their own phones.
+The Streamlit voting dashboard is deployed at **https://pythonid-10-2026.streamlit.app** so the audience can follow the votes on their own phones. It shows:
+
+- **People / Votes** with the record so far, **Approval** (hands ÷ people) as a percentage and progress bar, and **Reaction** time (seconds from the start of the current slide to its peak in hands)
+- **Energy** area chart of people and hands over the last 10 minutes, shared by every viewer
+- **Hands up vs. down** split and **left vs. right hand** counts (handy for two-option polls)
+- **Votes per slide** (most hands seen on each slide) and a **room map** of which third of the room is raising hands
+- **Top words** spoken, from the live Whisper transcript
 
 ## Quick Start
 
@@ -31,12 +37,14 @@ python presentation.py
 The deployed app runs on Streamlit Community Cloud, which can't see `votes.txt` on the presenter's laptop and can't receive incoming requests. So both sides talk to a small shared key-value store, a free [Upstash Redis](https://upstash.com) database, through its REST API:
 
 ```
-Laptop (YOLO) --SET votes "people,hands"--> Upstash Redis <--GET votes (every 1s)-- pythonid-10-2026.streamlit.app
+Laptop (YOLO + Whisper + slides) --LPUSH history / SET live--> Upstash Redis <--LRANGE history / GET live (every 1s)-- pythonid-10-2026.streamlit.app
 ```
 
-- `presentation_yolo.py` calls `presentation_redis.push(people, hands)` from its detection thread. Pushes are throttled to one per second so they don't slow down the webcam loop.
-- The dashboard wraps `presentation_redis.read()` in `st.cache_data(ttl=1)`. All audience sessions share one Redis `GET` per second, which keeps usage well inside the free tier.
-- If the Upstash variables aren't set, everything falls back to the local `votes.txt` file, so offline use still works.
+- `presentation_yolo.py` calls `presentation_redis.push(people)` from its detection thread with one `[x, left_hand_up, right_hand_up]` entry per person. Pushes are throttled to one per second (one pipelined HTTP request) so they don't slow down the webcam loop.
+- `presentation.py` records the current slide and `presentation_whisper.py` counts transcribed words in `presentation_redis.live` / `presentation_redis.words`; both ride along with each push.
+- Redis keeps two keys: `history`, a list of the last 600 one-second snapshots (10 minutes), and `live`, the latest room positions, top words and most hands per slide.
+- The dashboard wraps `presentation_redis.read()` in `st.cache_data(ttl=1)`. All audience sessions share one Redis read per second, which keeps usage well inside the free tier.
+- If the Upstash variables aren't set, everything falls back to local `votes.txt` (history) and `live.json` files, so offline use still works. Delete an old `votes.txt` from before this change, as its format is different.
 
 ### Setup
 
