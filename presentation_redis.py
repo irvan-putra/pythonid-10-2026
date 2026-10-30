@@ -1,6 +1,5 @@
 import os, json, time, urllib.request
 
-# Upstash Redis REST relay: laptop pushes, deployed dashboard reads (falls back to local votes.txt)
 URL, TOKEN = os.environ.get("UPSTASH_REDIS_REST_URL"), os.environ.get("UPSTASH_REDIS_REST_TOKEN")
 last_push = 0
 
