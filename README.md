@@ -9,6 +9,7 @@ A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **F
 3. **`presentation_yolo.py`** — Live webcam people & 17-keypoint pose estimation (`yolo11n-pose.pt`) with raised-hand vote counting.
 4. **`presentation_streamlit.py`** — Real-time Streamlit audience voting dashboard (`@st.fragment(run_every=1)`) displaying live audience charts (see below).
 5. **`presentation_redis.py`** — Tiny Upstash Redis REST relay (`push` / `read`) that sends live votes and spoken words from the laptop to the deployed dashboard.
+6. **`presentation_mqtt.py`** — Phone accelerometer over MQTT (local Mosquitto broker, `pythonid/sensor` topic) driving a Python loop: shaking the phone lights a red "LED" in the presentation window.
 
 ## 🌐 Live Dashboard
 
@@ -29,6 +30,7 @@ python presentation.py
 - **Left / Right Arrow Keys**: Navigate slides
 - **Voice Commands**: Say **"next"** or **"back"** into your microphone
 - **Raise Hand in Webcam**: Increments the live raised-hand vote count in Tkinter and the Streamlit dashboard
+- **Shake the Phone**: Lights the sensor LED. Start Mosquitto first (`mosquitto -c experiments/mosquitto.conf -v`) and run [`experiments/phone_sensor_termux.py`](experiments/phone_sensor_termux.py) on the phone; see [experiments/README.md](experiments/README.md#1-phone-sensors--mqtt--python-loop-sistem-komputer) for the setup. The presentation keeps running and connects whenever Mosquitto starts.
 
 ## Experiments
 

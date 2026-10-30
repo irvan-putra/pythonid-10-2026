@@ -1,5 +1,5 @@
 import tkinter as tk
-import presentation_whisper, presentation_yolo, presentation_streamlit
+import presentation_whisper, presentation_yolo, presentation_streamlit, presentation_mqtt
 
 read = lambda path: open(path, encoding="utf-8").read()
 slides = [
@@ -9,6 +9,7 @@ slides = [
     read("presentation_yolo.py"),
     read("presentation_streamlit.py"),
     read("presentation_redis.py"),
+    read("presentation_mqtt.py"),
 ]
 slide = 0
 
@@ -25,6 +26,7 @@ def go(step=0):
 
 presentation_whisper.start(root, go)
 presentation_yolo.start(root)
+presentation_mqtt.start(root)
 presentation_streamlit.start()
 root.bind("<Left>", lambda event: go(-1))
 root.bind("<Right>", lambda event: go(1))
