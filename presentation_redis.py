@@ -1,7 +1,7 @@
 import os, json, time, urllib.request
 
 URL, TOKEN = os.environ.get("UPSTASH_REDIS_REST_URL"), os.environ.get("UPSTASH_REDIS_REST_TOKEN")
-live, last_push = {"slide": 0, "slides": {}, "text": ""}, 0
+live, last_push = {"slide": 0, "text": ""}, 0
 
 def redis(*commands):
     headers = {"Authorization": f"Bearer {TOKEN}"}
@@ -14,7 +14,6 @@ def push(people, hands):
         return
     last_push = time.time()
     row = json.dumps({"time": last_push, "slide": live["slide"], "people": people, "hands": hands})
-    live["slides"][live["slide"]] = max(live["slides"].get(live["slide"], 0), hands)
     live_json = json.dumps(live)
     try:
         if URL:
