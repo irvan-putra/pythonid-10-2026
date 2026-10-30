@@ -1,13 +1,14 @@
 import tkinter as tk
 import presentation_whisper, presentation_yolo, presentation_streamlit, presentation_redis
 
+read = lambda f: open(f, encoding="utf-8").read()
 slides = [
     "Edge AI & Multimodal Applications in Python",
-    open(__file__, encoding="utf-8").read(),
-    open("presentation_whisper.py", encoding="utf-8").read(),
-    open("presentation_yolo.py", encoding="utf-8").read(),
-    open("presentation_streamlit.py", encoding="utf-8").read(),
-    open("presentation_redis.py", encoding="utf-8").read(),
+    read(__file__),
+    read("presentation_whisper.py"),
+    read("presentation_yolo.py"),
+    read("presentation_streamlit.py"),
+    read("presentation_redis.py"),
 ]
 i = 0
 
