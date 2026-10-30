@@ -6,8 +6,8 @@ slides = [
     open(__file__).read(),
     open("presentation_whisper.py").read(),
     open("presentation_yolo.py").read(),
-    open("presentation_redis.py").read(),
     open("presentation_streamlit.py").read(),
+    open("presentation_redis.py").read(),
 ]
 i = 0
 

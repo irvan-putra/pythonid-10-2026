@@ -7,8 +7,8 @@ A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **F
 1. **`presentation.py`** — Main Tkinter presentation engine (loads its own source code on Slide 1 and chains the remaining slides).
 2. **`presentation_whisper.py`** — Live voice slide navigation (`"next"` / `"back"`) and subtitle transcription using `faster-whisper` (`tiny.en`, `int8`) and `sounddevice`.
 3. **`presentation_yolo.py`** — Live webcam people & 17-keypoint pose estimation (`yolo11n-pose.pt`) with raised-hand vote counting.
-4. **`presentation_redis.py`** — Tiny Upstash Redis REST relay (`push` / `read`) that sends live votes from the laptop to the deployed dashboard.
-5. **`presentation_streamlit.py`** — Real-time Streamlit audience voting dashboard (`@st.fragment(run_every=1)`) displaying live people & raised-hand vote charts.
+4. **`presentation_streamlit.py`** — Real-time Streamlit audience voting dashboard (`@st.fragment(run_every=1)`) displaying live people & raised-hand vote charts.
+5. **`presentation_redis.py`** — Tiny Upstash Redis REST relay (`push` / `read`) that sends live votes from the laptop to the deployed dashboard.
 
 ## 🌐 Live Dashboard
 
