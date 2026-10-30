@@ -1,7 +1,7 @@
 import threading, tkinter as tk, sounddevice as sd
 from faster_whisper import WhisperModel
 
-def record():
+def record():  # 32k samples, rate 16kHz whisper trained = 2 seconds of audio, channel 1 = mono
     return sd.rec(32000, samplerate=16000, channels=1, dtype="float32", blocking=True).flatten()
 
 def show(subtitle, text):
