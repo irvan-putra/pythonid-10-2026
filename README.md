@@ -30,7 +30,7 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
 | 10 | `slides/slide_10_phone_mic.py` | Receives the phone mic and replaces Whisper's `record()`: the phone mic while it's connected, else the laptop mic |
 | 11 | `slides/slide_11_phone_mic.js` | The phone side: streams the mic over the `/audio` WebSocket |
 | 12 | `slides/slide_12_phone_camera.py` | Receives the phone camera and replaces YOLO's `webcam` with a `PhoneCamera` that has the same `isOpened()` / `read()` |
-| 13 | `slides/slide_13_phone_camera.js` | The phone side: sends camera frames as JPEG over the `/camera` WebSocket |
+| 13 | `slides/slide_13_phone_camera.js` | The phone side: rotates each camera frame to match how the phone is held (from gravity, via `devicemotion`), then sends it as JPEG over the `/camera` WebSocket |
 | 14 | `slides/slide_14_streamlit.md` | What is Streamlit? From raw events to a dashboard |
 | 14 | `slides/slide_14_publish.py` | Wraps Whisper's `show()` and YOLO's `update()` to also publish the transcript and votes to MQTT |
 | 15 | `slides/slide_15_subscribe.py` | The dashboard's MQTT subscriber: keeps one row of votes per second for 10 minutes, and the transcript |

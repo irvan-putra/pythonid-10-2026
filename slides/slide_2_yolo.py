@@ -1,5 +1,5 @@
 import threading, tkinter as tk, cv2
-from PIL import Image, ImageTk
+from PIL import Image, ImageOps, ImageTk
 from ultralytics import YOLO
 
 webcam = cv2.VideoCapture(0)
@@ -18,7 +18,7 @@ def detect(root, video):
         raised = [hand_up(keypoints) for keypoints in result.keypoints.xy]
         people, hands = len(raised), sum(raised)
         rgb = cv2.cvtColor(result.plot(), cv2.COLOR_BGR2RGB)
-        image = Image.fromarray(rgb).resize((320, 240))
+        image = ImageOps.contain(Image.fromarray(rgb), (320, 240))
         root.after(0, update, video, image, people, hands)
 
 def update(video, image, people, hands):
