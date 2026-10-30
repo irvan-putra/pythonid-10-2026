@@ -16,8 +16,7 @@ slide = 0
 root = tk.Tk()
 root.title(slides[0])
 root.geometry("1100x600")
-label = tk.Label(root, font=("Consolas", 13), justify="left")
-label.pack(side="left", expand=True)
+label = tk.Label(root, font=("Consolas", 13), justify="left", anchor="w")
 
 def go(step=0):
     global slide
@@ -27,6 +26,7 @@ def go(step=0):
 presentation_whisper.start(root, go)
 presentation_yolo.start(root)
 presentation_mqtt.start(root)
+label.pack(side="left", expand=True, fill="both", padx=10)  # last: fills the space left over
 presentation_streamlit.start()
 root.bind("<Left>", lambda event: go(-1))
 root.bind("<Right>", lambda event: go(1))
