@@ -1,0 +1,56 @@
+<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phone Sensor</title>
+<button id="start" style="font-size: 2em">📷🎙 Start</button>
+<p id="info" style="font-size: 1.5em"></p>
+<p id="heard" style="font-size: 1.5em"></p>
+<p id="state" style="color: gray"></p>
+<video id="video" playsinline muted style="width: 100%"></video>
+<script>
+const protocol = location.protocol === "https:" ? "wss" : "ws";  // secure page -> secure socket
+const socket = (path) => new WebSocket(`${protocol}://${location.host}/${path}`);
+
+async function streamCamera(stream) {
+  video.srcObject = stream;
+  await video.play();
+  const ws = socket("camera");
+  const canvas = document.createElement("canvas");
+  const send = () => {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0);
+    canvas.toBlob((jpeg) => ws.send(jpeg), "image/jpeg", 0.7);
+  };
+  ws.onopen = send;
+  ws.onmessage = (event) => { info.textContent = event.data; send(); };
+}
+
+function streamMic(stream, ctx) {
+  const ws = socket("audio");
+  ws.onmessage = (event) => (heard.textContent = event.data || "(heard nothing)");
+  ws.onclose = () => (state.textContent = "Disconnected from laptop");
+  const mic = ctx.createMediaStreamSource(stream);
+  const tap = ctx.createScriptProcessor(4096, 1, 1);
+  let sent = 0;
+  tap.onaudioprocess = (event) => {
+    const samples = event.inputBuffer.getChannelData(0);
+    if (ws.readyState === 1) ws.send(samples), sent++;
+    state.textContent = `Sent ${sent} mic chunks · level ${Math.max(...samples).toFixed(2)}`;
+  };
+  mic.connect(tap);
+  tap.connect(ctx.destination);
+}
+
+start.onclick = async () => {
+  try {
+    const ctx = new AudioContext({ sampleRate: 16000 });  // created on the tap, so audio may start
+    const backCamera = { facingMode: "environment", width: 640 };
+    const stream = await navigator.mediaDevices.getUserMedia({ video: backCamera, audio: true });
+    streamMic(stream, ctx);
+    await streamCamera(stream);
+    start.disabled = true;
+  } catch (error) {
+    state.textContent = `Error: ${error.message}`;
+  }
+};
+</script>

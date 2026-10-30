@@ -54,4 +54,4 @@ Allow Python and Mosquitto through the Windows firewall when asked, so phones on
 
 ## Phone as a Sensor
 
-Scripts that run on the laptop live in [`laptop/`](laptop/), and the one that runs on the phone is [`phone/termux.py`](phone/termux.py). [phone/README.md](phone/README.md) covers using a smartphone as the sensor over local Wi-Fi: the accelerometer over MQTT (part of the presentation), plus standalone camera → YOLO and microphone → Whisper pages that `laptop/camera.py` and `laptop/mic.py` serve over a WebSocket.
+Scripts that run on the laptop live in [`laptop/`](laptop/), and the one that runs on the phone is [`phone/termux.py`](phone/termux.py). [phone/README.md](phone/README.md) covers using a smartphone as the sensor over local Wi-Fi: the accelerometer over MQTT (part of the presentation), plus a standalone page that streams the phone's camera into YOLO and its microphone into Whisper, served over WebSockets by `laptop/phone.py`.
