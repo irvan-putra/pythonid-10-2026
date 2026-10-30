@@ -58,3 +58,5 @@ python -m uvicorn phone_mic_whisper:app --host 0.0.0.0 --port 8000
 ```
 
 On the phone, open `http://<laptop-ip>:8000` and tap **🎙 Start**.
+
+If the grey line says `Error: Permission denied`, the microphone is blocked before Chrome can ask. Check that Chrome **⋮ → Settings → Site settings → Microphone** is on, that Android **Settings → Apps → Chrome → Permissions → Microphone** is allowed, and on Samsung that **Mic access** is on in Quick Settings. Then reopen the page and tap **Allow** when asked.
