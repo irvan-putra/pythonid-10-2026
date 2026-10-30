@@ -1,4 +1,4 @@
-import threading, tkinter as tk, cv2
+import threading, tkinter as tk, cv2, presentation_streamlit
 from PIL import Image, ImageTk
 from ultralytics import YOLO
 
@@ -17,6 +17,7 @@ def detect(root, cam):
         )
         rgb = cv2.cvtColor(res.plot(), cv2.COLOR_BGR2RGB)
         img = Image.fromarray(rgb).resize((320, 240))
+        presentation_streamlit.push(len(res.boxes), hands)
         root.after(0, update, cam, img, len(res.boxes), hands)
 
 def update(cam, img, people, hands):
