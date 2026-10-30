@@ -6,7 +6,6 @@ files = sorted(pathlib.Path("slides").glob("slide_*"), key=number)
 slides, slide = [pathlib.Path(pathlib.Path(__file__).name), *files], 0
 
 root = tk.Tk()
-root.title("Edge AI & Multimodal Applications in Python")
 root.attributes("-fullscreen", True)
 content = tk.Label(root, font=("Consolas", 13), justify="left", anchor="w")
 panel = tk.Frame(root)
