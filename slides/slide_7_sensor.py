@@ -8,6 +8,6 @@ app = FastAPI()
 def page():
     return FileResponse(pathlib.Path(__file__).with_name("slide_8_sensor.html"))
 
-def start(root, go):  # the phone opens http://<laptop-ip>:8000
+def start(root, go):
     server = {"app": app, "host": "0.0.0.0", "port": 8000, "log_level": "warning"}
     threading.Thread(target=uvicorn.run, kwargs=server, daemon=True).start()

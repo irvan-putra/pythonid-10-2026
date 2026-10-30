@@ -5,7 +5,7 @@ from ultralytics import YOLO
 webcam = cv2.VideoCapture(0)
 
 def hand_up(keypoints):
-    y = keypoints[:, 1]  # 9,5 = left wrist/shoulder, 10,6 = right; y: top is 0, visible >0
+    y = keypoints[:, 1]
     return bool(0 < y[9] < y[5] or 0 < y[10] < y[6])
 
 def detect(root, video):

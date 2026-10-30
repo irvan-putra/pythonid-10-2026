@@ -5,7 +5,7 @@ def listen(topics, on_message, userdata=None):
     subscriptions = [(f"pythonid/{topic}", 0) for topic in topics]
     client.on_connect = lambda client, *args: client.subscribe(subscriptions)
     client.on_message = on_message
-    client.connect_async("localhost")  # keeps retrying in the background until Mosquitto runs
+    client.connect_async("localhost")
     client.loop_start()
 
 sender = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
@@ -18,12 +18,12 @@ def publish(topic, data, retain=False):
 def on_message(client, led, msg):
     reading = json.loads(msg.payload)
     x, y, z = reading["x"], reading["y"], reading["z"]
-    force = (x * x + y * y + z * z) ** 0.5  # m/s², about 9.8 when the phone is still
+    force = (x * x + y * y + z * z) ** 0.5
     color = "red" if force > 15 else "gray"
     led.after(0, led.config, {"fg": color, "text": f"● Phone: {force:4.1f} m/s²"})
 
 def start(root, go):
-    import tkinter as tk  # here, not at the top: the dashboard imports this file too
+    import tkinter as tk
     led = tk.Label(root, text="● Waiting for phone...", font=("Consolas", 12), fg="gray")
     led.pack(pady=5)
     listen(["sensor"], on_message, led)

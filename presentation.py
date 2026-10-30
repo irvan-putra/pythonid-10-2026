@@ -1,7 +1,7 @@
 import sys, pathlib, importlib, tkinter as tk
 
 sys.path.insert(0, "slides")
-number = lambda path: int(path.name.split("_")[1])  # so slide_10 comes after slide_9
+number = lambda path: int(path.name.split("_")[1])
 files = sorted(pathlib.Path("slides").glob("slide_*"), key=number)
 slides = [("presentation.py", open(__file__, encoding="utf-8").read())]
 slides += [(f"slides/{path.name}", path.read_text(encoding="utf-8")) for path in files]
@@ -11,7 +11,7 @@ root = tk.Tk()
 root.title("Edge AI & Multimodal Applications in Python")
 root.geometry("1100x600")
 label = tk.Label(root, font=("Consolas", 13), justify="left", anchor="w")
-panel = tk.Frame(root)  # right column: file name, camera, phone LED, subtitle
+panel = tk.Frame(root)
 panel.pack(side="right", padx=20)
 filename = tk.Label(panel, font=("Consolas", 12, "bold"))
 filename.pack()
@@ -23,10 +23,10 @@ def go(step=0):
     label.config(text=slides[slide][1])
 
 modules = [importlib.import_module(path.stem) for path in files if path.suffix == ".py"]
-for module in modules:  # all imported first: later slides patch earlier ones when imported
+for module in modules:
     if hasattr(module, "start"):
         module.start(panel, go)
-label.pack(side="left", expand=True, fill="both", padx=10)  # last: fills the space left over
+label.pack(side="left", expand=True, fill="both", padx=10)
 root.bind("<Left>", lambda event: go(-1))
 root.bind("<Right>", lambda event: go(1))
 go()

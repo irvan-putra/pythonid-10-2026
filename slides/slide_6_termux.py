@@ -1,14 +1,13 @@
 import sys, json, subprocess, paho.mqtt.client as mqtt
 
-# Runs on the phone (Termux): python slide_6_termux.py <laptop-ip>
 if __name__ == "__main__":
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     client.connect(sys.argv[1])
     client.loop_start()
-    command = ["termux-sensor", "-s", "accelerometer", "-d", "50"]  # a reading every 50 ms
+    command = ["termux-sensor", "-s", "accelerometer", "-d", "50"]
     sensor = subprocess.Popen(command, stdout=subprocess.PIPE, text=True)
     chunk = ""
-    for line in sensor.stdout:  # termux-sensor prints each reading as multi-line JSON
+    for line in sensor.stdout:
         chunk += line
         if line.rstrip() in ("}", "{}"):
             for reading in json.loads(chunk).values():

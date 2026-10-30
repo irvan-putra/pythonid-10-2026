@@ -11,7 +11,7 @@ async def audio(ws: WebSocket):
     try:
         while True:
             buffer = np.append(buffer, np.frombuffer(await ws.receive_bytes(), np.float32))
-            if len(buffer) >= 32000:  # 2 seconds at 16 kHz, like the laptop mic
+            if len(buffer) >= 32000:
                 chunks.put(buffer)
                 buffer = np.zeros(0, np.float32)
     except WebSocketDisconnect:

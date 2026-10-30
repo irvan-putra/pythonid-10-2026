@@ -5,13 +5,13 @@ from wordcloud import WordCloud
 def start(root, go):
     subprocess.Popen([sys.executable, "-m", "streamlit", "run", __file__])
 
-@st.cache_resource  # one MQTT subscriber, shared by every phone viewing the dashboard
+@st.cache_resource
 def live():
-    data = {"history": collections.deque(maxlen=60 * 10), "text": "", "last": 0}  # 10 minutes
+    data = {"history": collections.deque(maxlen=60 * 10), "text": "", "last": 0}
     def on_message(client, userdata, msg):
         if msg.topic == "pythonid/speech":
             data["text"] = json.loads(msg.payload)
-        elif time.time() - data["last"] >= 1:  # votes come every frame: keep 1 row per second
+        elif time.time() - data["last"] >= 1:
             data["last"] = time.time()
             data["history"].append({"time": data["last"], **json.loads(msg.payload)})
     mqtt.listen(["votes", "speech"], on_message)

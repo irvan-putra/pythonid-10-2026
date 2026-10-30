@@ -5,7 +5,7 @@ laptop_show, laptop_update, transcript = whisper.show, yolo.update, []
 def show(subtitle, text):
     laptop_show(subtitle, text)
     transcript.append(text)
-    mqtt.publish("speech", " ".join(transcript), retain=True)  # retained: late subscribers get it
+    mqtt.publish("speech", " ".join(transcript), retain=True)
 
 def update(video, image, people, hands):
     laptop_update(video, image, people, hands)
