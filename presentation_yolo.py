@@ -2,9 +2,9 @@ import threading, tkinter as tk, cv2, presentation_redis
 from PIL import Image, ImageTk
 from ultralytics import YOLO
 
-def hands_up(keypoints):
+def hand_up(keypoints):
     y = keypoints[:, 1]  # 9,5 = left wrist/shoulder, 10,6 = right; y: top is 0, visible >0
-    return int(0 < y[9] < y[5]), int(0 < y[10] < y[6])
+    return bool(0 < y[9] < y[5] or 0 < y[10] < y[6])
 
 def detect(root, video):
     model = YOLO("yolo11n-pose.pt")
@@ -14,16 +14,16 @@ def detect(root, video):
         if not ok:
             break
         result = model(frame, verbose=False)[0]
-        people = [hands_up(keypoints) for keypoints in result.keypoints.xy]
-        hands = sum(1 for left_up, right_up in people if left_up or right_up)
+        raised = [hand_up(keypoints) for keypoints in result.keypoints.xy]
+        people, hands = len(raised), sum(raised)
         rgb = cv2.cvtColor(result.plot(), cv2.COLOR_BGR2RGB)
         image = Image.fromarray(rgb).resize((320, 240))
-        presentation_redis.push(people)
-        root.after(0, update, video, image, len(people), hands)
+        presentation_redis.push(people, hands)
+        root.after(0, update, video, image, people, hands)
 
-def update(video, image, people_count, hands_count):
+def update(video, image, people, hands):
     video.photo = ImageTk.PhotoImage(image)
-    text = f"👥 People: {people_count} | ✋ Hands: {hands_count}"
+    text = f"👥 People: {people} | ✋ Hands: {hands}"
     video.config(image=video.photo, text=text, compound="top")
 
 def start(root):

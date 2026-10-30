@@ -8,16 +8,12 @@ def redis(*commands):
     request = urllib.request.Request(f"{URL}/pipeline", json.dumps(commands).encode(), headers)
     return [reply["result"] for reply in json.load(urllib.request.urlopen(request, timeout=2))]
 
-def push(people):
+def push(people, hands):
     global last_push
     if time.time() - last_push < 1:
         return
     last_push = time.time()
-    hands = sum(1 for left_up, right_up in people if left_up or right_up)
-    left = sum(left_up for left_up, right_up in people)
-    right = sum(right_up for left_up, right_up in people)
-    row = json.dumps({"time": last_push, "slide": live["slide"], "people": len(people),
-                      "hands": hands, "left": left, "right": right})
+    row = json.dumps({"time": last_push, "slide": live["slide"], "people": people, "hands": hands})
     live["slides"][live["slide"]] = max(live["slides"].get(live["slide"], 0), hands)
     live_json = json.dumps(live)
     try:

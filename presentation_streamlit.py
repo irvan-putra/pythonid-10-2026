@@ -26,11 +26,8 @@ if __name__ == "__main__":
         c4.metric("⏱ Reaction", f"{reaction:.0f}s")
         st.progress(min(approval, 1.0))
         st.area_chart(history.set_index("time")[["people", "hands"]], x_label="Time", y_label="Energy")
-        up_down, left_right = st.columns(2)
         room = {"✋ Up": latest["hands"], "🙅 Down": latest["people"] - latest["hands"]}
-        up_down.bar_chart(pd.DataFrame([room], index=["Room"]), horizontal=True)
-        hands = {"⬅ Left hand": latest["left"], "Right hand ➡": latest["right"]}
-        left_right.bar_chart(hands, y_label="Hands", sort=False)
+        st.bar_chart(pd.DataFrame([room], index=["Room"]), horizontal=True)
         st.bar_chart(pd.Series(live["slides"], dtype=int), x_label="Slide", y_label="Most hands")
         cloud = WordCloud(width=800, height=300, background_color="white")
         if words := cloud.process_text(live["text"]):
