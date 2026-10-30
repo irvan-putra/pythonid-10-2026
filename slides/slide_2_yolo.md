@@ -3,8 +3,9 @@ What is YOLO?
 
 - "You Only Look Once": finds objects in an image in a single pass
   of a neural network, fast enough for live video
-- Introduced in 2015 by Redmon et al.; Ultralytics maintains
-  today's versions, YOLO11 in this talk
+- Introduced in 2015 by Redmon et al.; since then many teams have
+  built new versions. This talk uses YOLO11 from Ultralytics
+  (pip install ultralytics, AGPL-3.0 licence)
 - Tasks: detect, segment, classify, track, and pose
 
 Pose estimation with yolo11n-pose.pt:
