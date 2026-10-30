@@ -1,12 +1,9 @@
+# Python
 __pycache__/
-*.pyc
+.venv/
+
+# YOLO weights, downloaded on first run
 *.pt
-app/
-build/
-*.apk
-*.idsig
-build-apk.ps1
-hello_world.py
-investor_pitch_deck.py
-edge_ai_presentation.py
+
+# HTTPS keys for the phone camera/mic pages (phone/README.md)
 *.pem
