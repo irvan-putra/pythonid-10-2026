@@ -6,7 +6,7 @@ Find the laptop's IP with `ipconfig` (Windows) or `ip addr` (Linux/macOS), shown
 
 ## Accelerometer → MQTT → presentation (Sistem Komputer)
 
-`sensor_termux.py` runs on the phone and publishes accelerometer readings to the `pythonid/sensor` topic. The presentation's `presentation_broker.py` starts the Mosquitto broker with `mosquitto.conf`, and `presentation_mqtt.py` lights the sensor LED while the phone is shaken.
+`sensor_termux.py` runs on the phone and publishes accelerometer readings to the `pythonid/sensor` topic. The presentation's `slide_broker.py` starts the Mosquitto broker with `mosquitto.conf`, and `slide_mqtt.py` lights the sensor LED while the phone is shaken.
 
 **Laptop (one time):** install [Mosquitto](https://mosquitto.org/download/). On Windows, if the installer added a Mosquitto service, stop it from an Administrator PowerShell with `net stop mosquitto`: it only accepts connections from the laptop itself, and it holds the port the presentation needs.
 

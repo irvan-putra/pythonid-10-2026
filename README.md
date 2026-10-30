@@ -5,12 +5,12 @@ A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **F
 ## Slides & Scripts
 
 1. **`presentation.py`** — Main Tkinter presentation engine (loads its own source code on Slide 1 and chains the remaining slides).
-2. **`presentation_whisper.py`** — Live voice slide navigation (`"next"` / `"back"`) and subtitle transcription using `faster-whisper` (`tiny.en`, `int8`) and `sounddevice`. Publishes the transcript to the `pythonid/speech` topic.
-3. **`presentation_yolo.py`** — Live webcam people & 17-keypoint pose estimation (`yolo11n-pose.pt`) with raised-hand vote counting. Publishes the counts on every frame to the `pythonid/votes` topic.
-4. **`presentation_broker.py`** — Starts the local [Mosquitto](https://mosquitto.org/download/) MQTT broker with `phone/mosquitto.conf` when the presentation starts, and stops it when the window closes.
-5. **`presentation_mqtt.py`** — Shared MQTT helpers (`listen`, `publish`), and the phone accelerometer (`pythonid/sensor` topic) driving a Python loop: shaking the phone lights a red "LED" in the presentation window.
+2. **`slide_whisper.py`** — Live voice slide navigation (`"next"` / `"back"`) and subtitle transcription using `faster-whisper` (`tiny.en`, `int8`) and `sounddevice`. Publishes the transcript to the `pythonid/speech` topic.
+3. **`slide_yolo.py`** — Live webcam people & 17-keypoint pose estimation (`yolo11n-pose.pt`) with raised-hand vote counting. Publishes the counts on every frame to the `pythonid/votes` topic.
+4. **`slide_broker.py`** — Starts the local [Mosquitto](https://mosquitto.org/download/) MQTT broker with `phone/mosquitto.conf` when the presentation starts, and stops it when the window closes.
+5. **`slide_mqtt.py`** — Shared MQTT helpers (`listen`, `publish`), and the phone accelerometer (`pythonid/sensor` topic) driving a Python loop: shaking the phone lights a red "LED" in the presentation window.
 6. **`phone/sensor_termux.py`** — Runs on the phone in Termux and publishes its accelerometer readings to the broker.
-7. **`presentation_streamlit.py`** — Real-time Streamlit audience dashboard (`@st.fragment(run_every=1)`) that subscribes to the votes and speech topics.
+7. **`slide_streamlit.py`** — Real-time Streamlit audience dashboard (`@st.fragment(run_every=1)`) that subscribes to the votes and speech topics.
 
 ```
 Phone accelerometer ──► pythonid/sensor ──► sensor LED in the presentation

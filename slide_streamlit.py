@@ -1,4 +1,4 @@
-import json, time, subprocess, sys, collections, pandas as pd, streamlit as st, presentation_mqtt
+import json, time, subprocess, sys, collections, pandas as pd, streamlit as st, slide_mqtt
 from wordcloud import WordCloud
 
 def start():
@@ -13,7 +13,7 @@ def live():
         elif time.time() - data["last"] >= 1:  # YOLO sends every frame: keep 1 row per second
             data["last"] = time.time()
             data["history"].append({"time": data["last"], **json.loads(msg.payload)})
-    presentation_mqtt.listen(["votes", "speech"], on_message)
+    slide_mqtt.listen(["votes", "speech"], on_message)
     return data
 
 if __name__ == "__main__":

@@ -1,17 +1,16 @@
 import tkinter as tk
-import presentation_whisper, presentation_yolo, presentation_streamlit
-import presentation_broker, presentation_mqtt
+import slide_whisper, slide_yolo, slide_broker, slide_mqtt, slide_streamlit
 
 read = lambda path: open(path, encoding="utf-8").read()
 slides = [
     "Edge AI & Multimodal Applications in Python",
     read(__file__),
-    read("presentation_whisper.py"),
-    read("presentation_yolo.py"),
-    read("presentation_broker.py"),
-    read("presentation_mqtt.py"),
+    read("slide_whisper.py"),
+    read("slide_yolo.py"),
+    read("slide_broker.py"),
+    read("slide_mqtt.py"),
     read("phone/sensor_termux.py"),
-    read("presentation_streamlit.py"),
+    read("slide_streamlit.py"),
 ]
 slide = 0
 
@@ -25,12 +24,12 @@ def go(step=0):
     slide = (slide + step) % len(slides)
     label.config(text=slides[slide])
 
-presentation_whisper.start(root, go)
-presentation_yolo.start(root)
-presentation_broker.start()
-presentation_mqtt.start(root)
+slide_whisper.start(root, go)
+slide_yolo.start(root)
+slide_broker.start()
+slide_mqtt.start(root)
 label.pack(side="left", expand=True, fill="both", padx=10)  # last: fills the space left over
-presentation_streamlit.start()
+slide_streamlit.start()
 root.bind("<Left>", lambda event: go(-1))
 root.bind("<Right>", lambda event: go(1))
 go()

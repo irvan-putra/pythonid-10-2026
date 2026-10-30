@@ -1,4 +1,4 @@
-import threading, tkinter as tk, sounddevice as sd, presentation_mqtt
+import threading, tkinter as tk, sounddevice as sd, slide_mqtt
 from faster_whisper import WhisperModel
 
 def listen(root, go, subtitle):
@@ -9,7 +9,7 @@ def listen(root, go, subtitle):
         text = " ".join(segment.text.strip() for segment in segments)
         if text:
             transcript += " " + text  # retained: a dashboard opened later still gets all of it
-            presentation_mqtt.publish("speech", transcript, retain=True)
+            slide_mqtt.publish("speech", transcript, retain=True)
             root.after(0, lambda text=text: subtitle.config(text=f"🎙 {text}"))
         if "next" in text.lower():
             root.after(0, go, 1)
