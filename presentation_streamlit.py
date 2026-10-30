@@ -20,7 +20,7 @@ if __name__ == "__main__":
         c1.metric("👥 People", latest["people"], f"record {history.people.max()}")
         c2.metric("✋ Votes", latest["hands"], f"record {history.hands.max()}")
         c3.metric("👍 Approval", f"{approval:.0%}")
-        st.area_chart(history.set_index("time")[["people", "hands"]], x_label="Time", y_label="Energy")
+        st.area_chart(history.set_index("time")[["people", "hands"]])
         cloud = WordCloud(width=800, height=300, background_color="white")
         if words := cloud.process_text(live["text"]):
             st.image(cloud.generate_from_frequencies(words).to_image())
