@@ -1,4 +1,5 @@
 import subprocess, sys, pandas as pd, streamlit as st, presentation_redis
+from wordcloud import WordCloud
 
 def start():
     subprocess.Popen([sys.executable, "-m", "streamlit", "run", __file__])
@@ -27,6 +28,8 @@ if __name__ == "__main__":
         a.bar_chart(pd.DataFrame([{"✋ Up": now["hands"], "🙅 Down": now["people"] - now["hands"]}], index=["Room"]), horizontal=True)
         b.bar_chart({"⬅ Left hand": now["left"], "Right hand ➡": now["right"]}, y_label="Hands", sort=False)
         st.bar_chart(pd.Series(live["slides"], dtype=int), x_label="Slide", y_label="Most hands")
-        st.bar_chart(pd.Series(dict(live["words"]), dtype=int), horizontal=True, x_label="Times spoken", sort=False)
+        cloud = WordCloud(width=800, height=300, background_color="white")
+        if words := cloud.process_text(live["text"]):
+            st.image(cloud.generate_from_frequencies(words).to_image())
 
     live_charts()

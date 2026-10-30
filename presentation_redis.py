@@ -1,8 +1,7 @@
 import os, json, time, urllib.request
-from collections import Counter
 
 URL, TOKEN = os.environ.get("UPSTASH_REDIS_REST_URL"), os.environ.get("UPSTASH_REDIS_REST_TOKEN")
-live, words, last_push = {"slide": 0, "slides": {}}, Counter(), 0
+live, last_push = {"slide": 0, "slides": {}, "text": ""}, 0
 
 def redis(*cmds):
     req = urllib.request.Request(f"{URL}/pipeline", json.dumps(cmds).encode(), {"Authorization": f"Bearer {TOKEN}"})
@@ -16,7 +15,7 @@ def push(people):
     row = json.dumps({"t": last_push, "slide": live["slide"], "people": len(people), "hands": hands,
                       "left": sum(l for l, r in people), "right": sum(r for l, r in people)})
     live["slides"][live["slide"]] = max(live["slides"].get(live["slide"], 0), hands)
-    now = json.dumps({**live, "words": words.most_common(15)})
+    now = json.dumps(live)
     try:
         if URL:
             redis(["LPUSH", "history", row], ["LTRIM", "history", "0", "599"], ["SET", "live", now])
