@@ -4,26 +4,33 @@ A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **F
 
 ## Slides
 
-`presentation.py` shows its own source code first, then every `slide_*` file (code, config, page or `.png` image) in [`slides/`](slides/) in slide-number order, with the current file name above the camera. It imports every slide module first, then calls each one's `start(panel, go)`.
+`presentation.py` shows its own source code first, then every `slide_*` file in slide-number order. A new concept is introduced by a short `.md` slide with the same number, shown just before the code. The files in [`slides/`](slides/) can be code, config, a web page, scripts or a `.png` image, and the current file name shows above the camera. It imports every slide module first, then calls each one's `start(panel, go)`.
 
 Slides 1 and 2 are plain laptop code. Later slides extend them by replacing their functions and objects when imported (monkeypatching), so each new idea lives in its own slide.
 
 | Slide | File | What it shows |
 |---|---|---|
 | 0 | `presentation.py` | The presentation engine itself |
+| 1 | `slides/slide_1_whisper.md` | What is Whisper? |
 | 1 | `slides/slide_1_whisper.py` | Laptop mic → `faster-whisper` (`tiny.en`, `int8`) → say **"next"** / **"back"** to change slides, with a live subtitle |
+| 2 | `slides/slide_2_yolo.md` | What is YOLO? |
 | 2 | `slides/slide_2_yolo.py` | Laptop webcam → YOLO11 pose (`yolo11n-pose.pt`) → people and raised-hand count |
 | 3 | `slides/slide_3_coco.png` | The COCO pose keypoints, and how a raised hand is detected |
+| 4 | `slides/slide_4_mqtt.md` | What is MQTT? |
 | 4 | `slides/slide_4_broker.py` | The "Waiting for phone..." line: the laptop runs a local [Mosquitto](https://mosquitto.org/download/) MQTT broker, started with the presentation and stopped when the window closes |
 | 5 | `slides/slide_5_mosquitto.conf` | The broker config that lets the phone on the same Wi-Fi connect |
 | 6 | `slides/slide_6_mqtt.py` | MQTT helpers (`listen`, `publish`) and the sensor LED: shaking the phone turns it red |
+| 7 | `slides/slide_7_termux.md` | What is Termux? |
 | 7 | `slides/slide_7_termux.py` | Runs on the phone in Termux and publishes its accelerometer to the broker |
+| 8 | `slides/slide_8_websocket.md` | FastAPI and WebSockets |
 | 8 | `slides/slide_8_sensor.py` | A FastAPI server on port 8000 that serves the phone page and its scripts |
 | 9 | `slides/slide_9_sensor.html` | The page the phone opens to stream its camera and mic over WebSockets |
+| 10 | `slides/slide_10_monkeypatch.md` | Monkeypatching and duck typing, used on slides 10 and 12 |
 | 10 | `slides/slide_10_phone_mic.py` | Receives the phone mic and replaces Whisper's `record()`: the phone mic while it's connected, else the laptop mic |
 | 11 | `slides/slide_11_phone_mic.js` | The phone side: streams the mic over the `/audio` WebSocket |
 | 12 | `slides/slide_12_phone_camera.py` | Receives the phone camera and replaces YOLO's `webcam` with a `PhoneCamera` that has the same `isOpened()` / `read()` |
 | 13 | `slides/slide_13_phone_camera.js` | The phone side: sends camera frames as JPEG over the `/camera` WebSocket |
+| 14 | `slides/slide_14_streamlit.md` | What is Streamlit? From raw events to a dashboard |
 | 14 | `slides/slide_14_publish.py` | Wraps Whisper's `show()` and YOLO's `update()` to also publish the transcript and votes to MQTT |
 | 15 | `slides/slide_15_subscribe.py` | The dashboard's MQTT subscriber: keeps one row of votes per second for 10 minutes, and the transcript |
 | 16 | `slides/slide_16_dashboard.py` | The local Streamlit dashboard with all the live data |

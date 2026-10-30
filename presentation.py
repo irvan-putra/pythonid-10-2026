@@ -1,8 +1,8 @@
 import sys, pathlib, importlib, tkinter as tk
 
 sys.path.insert(0, "slides")
-number = lambda path: int(path.name.split("_")[1])
-files = sorted(pathlib.Path("slides").glob("slide_*"), key=number)
+order = lambda path: (int(path.name.split("_")[1]), path.suffix != ".md")
+files = sorted(pathlib.Path("slides").glob("slide_*"), key=order)
 slides, slide = [pathlib.Path(pathlib.Path(__file__).name), *files], 0
 
 root = tk.Tk()
