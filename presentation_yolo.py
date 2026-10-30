@@ -3,8 +3,7 @@ from PIL import Image, ImageTk
 from ultralytics import YOLO
 
 def hands_up(keypoints):
-    # COCO keypoints: 5,6 = L/R shoulder, 9,10 = L/R wrist; y is 0 at the top and >0 when visible
-    y = keypoints[:, 1]
+    y = keypoints[:, 1]  # 9,5 = left wrist/shoulder, 10,6 = right; y: top is 0, visible >0
     return int(0 < y[9] < y[5]), int(0 < y[10] < y[6])
 
 def detect(root, video):
