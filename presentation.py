@@ -1,6 +1,6 @@
 import sys, pathlib, importlib, tkinter as tk
 
-sys.path.insert(0, "slides")  # one file per slide, named by its slide number
+sys.path.insert(0, "slides")  # one file per slide, shown in name order
 files = sorted(pathlib.Path("slides").glob("*.py"))
 slides = [("", "Edge AI & Multimodal Applications in Python")]
 slides += [("presentation.py", open(__file__, encoding="utf-8").read())]

@@ -1,6 +1,5 @@
-import threading, importlib, tkinter as tk, sounddevice as sd
+import threading, tkinter as tk, sounddevice as sd, slide_4_mqtt as mqtt
 from faster_whisper import WhisperModel
-mqtt = importlib.import_module("5_mqtt")  # file names start with the slide number
 
 def listen(root, go, subtitle):
     model, transcript = WhisperModel("tiny.en", compute_type="int8"), ""

@@ -6,7 +6,7 @@ Find the laptop's IP with `ipconfig` (Windows) or `ip addr` (Linux/macOS), shown
 
 ## Accelerometer → MQTT → presentation (Sistem Komputer)
 
-`slides/6_termux.py` runs on the phone and publishes accelerometer readings to the `pythonid/sensor` topic. The presentation's `slides/4_broker.py` starts the Mosquitto broker with `slides/mosquitto.conf`, and `slides/5_mqtt.py` lights the sensor LED while the phone is shaken.
+`slides/slide_5_termux.py` runs on the phone and publishes accelerometer readings to the `pythonid/sensor` topic. The presentation's `slides/slide_3_broker.py` starts the Mosquitto broker with `slides/mosquitto.conf`, and `slides/slide_4_mqtt.py` lights the sensor LED while the phone is shaken.
 
 **Laptop (one time):** install [Mosquitto](https://mosquitto.org/download/). On Windows, if the installer added a Mosquitto service, stop it from an Administrator PowerShell with `net stop mosquitto`: it only accepts connections from the laptop itself, and it holds the port the presentation needs.
 
@@ -19,16 +19,16 @@ pkg install python termux-api
 python -m pip install paho-mqtt
 ```
 
-Copy `slides/6_termux.py` to the phone, for example:
+Copy `slides/slide_5_termux.py` to the phone, for example:
 
 ```bash
-curl -O https://raw.githubusercontent.com/irvan-putra/pythonid-10-2026/main/slides/6_termux.py
+curl -O https://raw.githubusercontent.com/irvan-putra/pythonid-10-2026/main/slides/slide_5_termux.py
 ```
 
 **Each time:** start `python presentation.py` on the laptop, then on the phone:
 
 ```bash
-python 6_termux.py <laptop-ip>
+python slide_5_termux.py <laptop-ip>
 ```
 
 ## Camera + mic → WebSocket → YOLO + Whisper (Teknik Informatika)

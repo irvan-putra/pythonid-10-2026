@@ -1,7 +1,6 @@
-import threading, importlib, tkinter as tk, cv2
+import threading, tkinter as tk, cv2, slide_4_mqtt as mqtt
 from PIL import Image, ImageTk
 from ultralytics import YOLO
-mqtt = importlib.import_module("5_mqtt")  # file names start with the slide number
 
 def hand_up(keypoints):
     y = keypoints[:, 1]  # 9,5 = left wrist/shoulder, 10,6 = right; y: top is 0, visible >0

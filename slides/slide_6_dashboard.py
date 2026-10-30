@@ -1,6 +1,6 @@
-import json, time, importlib, subprocess, sys, collections, pandas as pd, streamlit as st
+import json, time, subprocess, sys, collections
+import pandas as pd, streamlit as st, slide_4_mqtt as mqtt
 from wordcloud import WordCloud
-mqtt = importlib.import_module("5_mqtt")  # file names start with the slide number
 
 def start(root, go):
     subprocess.Popen([sys.executable, "-m", "streamlit", "run", __file__])
