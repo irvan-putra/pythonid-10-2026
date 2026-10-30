@@ -1,0 +1,6 @@
+faster-whisper
+sounddevice
+ultralytics
+opencv-python
+pillow
+streamlit

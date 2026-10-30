@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pt
+votes.txt
+app/
+build/
+*.apk
+*.idsig
+build-apk.ps1
+hello_world.py
+investor_pitch_deck.py
+edge_ai_presentation.py
