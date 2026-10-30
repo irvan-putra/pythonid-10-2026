@@ -4,12 +4,13 @@ A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **F
 
 ## Slides
 
-`presentation.py` shows its own source code first, then every `slide_*` file in slide-number order. A new concept is introduced by a short `.md` slide with the same number, shown just before the code. The files in [`slides/`](slides/) can be code, config, a web page, scripts or a `.png` image, and the current file name shows above the camera. It imports every slide module first, then calls each one's `start(panel, go)`.
+`presentation.py` opens with the Tkinter introduction, shows its own source code, then every other `slide_*` file in slide-number order. A new concept is introduced by a short `.md` slide with the same number, shown just before the code. The files in [`slides/`](slides/) can be code, config, a web page, scripts or a `.png` image, and the current file name shows above the camera. It imports every slide module first, then calls each one's `start(panel, go)`.
 
 Slides 1 and 2 are plain laptop code. Later slides extend them by replacing their functions and objects when imported (monkeypatching), so each new idea lives in its own slide.
 
 | Slide | File | What it shows |
 |---|---|---|
+| 0 | `slides/slide_0_tkinter.md` | What is Tkinter? |
 | 0 | `presentation.py` | The presentation engine itself |
 | 1 | `slides/slide_1_whisper.md` | What is Whisper? |
 | 1 | `slides/slide_1_whisper.py` | Laptop mic → `faster-whisper` (`tiny.en`, `int8`) → say **"next"** / **"back"** to change slides, with a live subtitle |

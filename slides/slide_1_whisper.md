@@ -3,7 +3,8 @@ What is Whisper?
 
 - A speech-to-text model by OpenAI, open source (MIT licence, 2022)
 - Trained on 680,000 hours of audio in many languages
-- A Transformer: audio goes in, text comes out
+- A Transformer: audio goes in, text comes out. Transformers were
+  introduced by Google in 2017 ("Attention Is All You Need")
 - Sizes from tiny (39M parameters) to large (1.5B)
 
 This talk uses faster-whisper:

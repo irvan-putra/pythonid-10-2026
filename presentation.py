@@ -3,7 +3,7 @@ import sys, pathlib, importlib, tkinter as tk
 sys.path.insert(0, "slides")
 order = lambda path: (int(path.name.split("_")[1]), path.suffix != ".md")
 files = sorted(pathlib.Path("slides").glob("slide_*"), key=order)
-slides, slide = [pathlib.Path(pathlib.Path(__file__).name), *files], 0
+slides, slide = [files[0], pathlib.Path(pathlib.Path(__file__).name), *files[1:]], 0
 
 root = tk.Tk()
 root.attributes("-fullscreen", True)
