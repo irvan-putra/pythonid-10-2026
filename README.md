@@ -4,7 +4,7 @@ A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **F
 
 ## Slides
 
-`presentation.py` opens with the Tkinter introduction, shows its own source code, then every other `slide_*` file in slide-number order. A new concept is introduced by a short `.md` slide with the same number, shown just before the code. The files in [`slides/`](slides/) can be code, config, a web page, scripts or a `.png` image, and the current file name shows above the camera. It imports every slide module first, then calls each one's `start(panel, go)`.
+`presentation.py` opens with the Tkinter introduction, shows its own source code, then every other `slide_*` file in slide-number order. A new concept is introduced by a short `.md` slide with the same number; within a number, code (`.py`) comes last. The files in [`slides/`](slides/) can be code, config, a web page, scripts or a `.png` image, and the current file name shows above the camera. It imports every slide module first, then calls each one's `start(panel, go)`.
 
 Slides 1 and 2 are plain laptop code. Later slides extend them by replacing their functions and objects when imported (monkeypatching), so each new idea lives in its own slide.
 
@@ -17,6 +17,7 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
 | 2 | `slides/slide_2_yolo.md` | What is YOLO? |
 | 2 | `slides/slide_2_yolo.py` | Laptop webcam → YOLO11 pose (`yolo11n-pose.pt`) → people and raised-hand count |
 | 3 | `slides/slide_3_coco.png` | The COCO pose keypoints, and how a raised hand is detected |
+| 3 | `slides/slide_3_yolo_face.md` | For the curious: YOLO-Face, face detection vs recognition |
 | 4 | `slides/slide_4_mqtt.md` | What is MQTT? |
 | 4 | `slides/slide_4_mqtt_vs_coap.md` | MQTT vs CoAP: two ways to talk IoT |
 | 4 | `slides/slide_4_broker.py` | The "Waiting for phone..." line: the laptop runs a local [Mosquitto](https://mosquitto.org/download/) MQTT broker, started with the presentation and stopped when the window closes |

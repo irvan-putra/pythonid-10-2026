@@ -2,7 +2,7 @@ import sys, pathlib, importlib, tkinter as tk
 
 sys.path.insert(0, "slides")
 repo = "github.com/irvan-putra\n/pythonid-10-2026\n/blob/main/\n"
-order = lambda path: (int(path.name.split("_")[1]), path.suffix != ".md", path.name)
+order = lambda path: (int(path.name.split("_")[1]), path.suffix == ".py", path.name)
 files = sorted(pathlib.Path("slides").glob("slide_*"), key=order)
 slides, slide = [files[0], pathlib.Path(pathlib.Path(__file__).name), *files[1:]], 0
 
