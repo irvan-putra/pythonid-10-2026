@@ -1,5 +1,5 @@
 import tkinter as tk
-import presentation_whisper, presentation_yolo, presentation_streamlit, presentation_redis
+import presentation_whisper, presentation_yolo, presentation_streamlit
 
 read = lambda path: open(path, encoding="utf-8").read()
 slides = [
@@ -20,7 +20,7 @@ label.pack(side="left", expand=True)
 
 def go(step=0):
     global slide
-    slide = presentation_redis.live["slide"] = (slide + step) % len(slides)
+    slide = (slide + step) % len(slides)
     label.config(text=slides[slide])
 
 presentation_whisper.start(root, go)

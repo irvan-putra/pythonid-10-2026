@@ -15,15 +15,12 @@ if __name__ == "__main__":
             history, latest = pd.DataFrame(rows), rows[-1]
         except Exception:
             return st.info("⏳ Waiting for votes...")
-        this_slide = history[history.slide == latest["slide"]]
-        reaction = this_slide["time"][this_slide.hands.idxmax()] - this_slide["time"].min()  # seconds
         history["time"] = pd.to_datetime(history["time"], unit="s")
         approval = latest["hands"] / max(latest["people"], 1)
-        c1, c2, c3, c4 = st.columns(4)
+        c1, c2, c3 = st.columns(3)
         c1.metric("👥 People", latest["people"], f"record {history.people.max()}", delta_color="off")
         c2.metric("✋ Votes", latest["hands"], f"record {history.hands.max()}", delta_color="off")
         c3.metric("👍 Approval", f"{approval:.0%}")
-        c4.metric("⏱ Reaction", f"{reaction:.0f}s")
         st.area_chart(history.set_index("time")[["people", "hands"]], x_label="Time", y_label="Energy")
         cloud = WordCloud(width=800, height=300, background_color="white")
         if words := cloud.process_text(live["text"]):

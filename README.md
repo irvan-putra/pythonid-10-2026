@@ -8,13 +8,13 @@ A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **F
 2. **`presentation_whisper.py`** — Live voice slide navigation (`"next"` / `"back"`) and subtitle transcription using `faster-whisper` (`tiny.en`, `int8`) and `sounddevice`.
 3. **`presentation_yolo.py`** — Live webcam people & 17-keypoint pose estimation (`yolo11n-pose.pt`) with raised-hand vote counting.
 4. **`presentation_streamlit.py`** — Real-time Streamlit audience voting dashboard (`@st.fragment(run_every=1)`) displaying live audience charts (see below).
-5. **`presentation_redis.py`** — Tiny Upstash Redis REST relay (`push` / `read`) that sends live votes, slide number and spoken words from the laptop to the deployed dashboard.
+5. **`presentation_redis.py`** — Tiny Upstash Redis REST relay (`push` / `read`) that sends live votes and spoken words from the laptop to the deployed dashboard.
 
 ## 🌐 Live Dashboard
 
 The Streamlit voting dashboard is deployed at **https://pythonid-10-2026.streamlit.app** so the audience can follow the votes on their own phones. It shows:
 
-- **People / Votes** with the record so far, **Approval** (hands ÷ people) as a percentage, and **Reaction** time (seconds from the start of the current slide to its peak in hands)
+- **People / Votes** with the record so far, and **Approval** (hands ÷ people) as a percentage
 - **Energy** area chart of people and hands over the last 10 minutes, shared by every viewer
 - **Word cloud** of everything said so far, from the live Whisper transcript
 
@@ -39,8 +39,8 @@ Laptop (YOLO + Whisper + slides) --LPUSH history / SET live--> Upstash Redis <--
 ```
 
 - `presentation_yolo.py` calls `presentation_redis.push(people, hands)` from its detection thread with the people and raised-hand counts. Pushes are throttled to one per second (one pipelined HTTP request) so they don't slow down the webcam loop.
-- `presentation.py` records the current slide and `presentation_whisper.py` appends the transcript to `presentation_redis.live`; both ride along with each push.
-- Redis keeps two keys: `history`, a list of the last 600 one-second snapshots (10 minutes), and `live`, the current slide and full transcript.
+- `presentation_whisper.py` appends the transcript to `presentation_redis.live`, which rides along with each push.
+- Redis keeps two keys: `history`, a list of the last 600 one-second snapshots (10 minutes), and `live`, the full transcript.
 - The dashboard wraps `presentation_redis.read()` in `st.cache_data(ttl=1)`. All audience sessions share one Redis read per second, which keeps usage well inside the free tier.
 - If the Upstash variables aren't set, everything falls back to local `votes.txt` (history) and `live.json` files, so offline use still works. Delete an old `votes.txt` from before this change, as its format is different.
 
