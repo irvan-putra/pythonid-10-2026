@@ -37,6 +37,7 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
 | 12 | `slides/slide_12_phone_camera.py` | Receives the phone camera and replaces YOLO's `webcam` with a `PhoneCamera` that has the same `isOpened()` / `read()` |
 | 13 | `slides/slide_13_phone_camera.js` | The phone side: rotates each camera frame to match how the phone is held (from gravity, via `devicemotion`), then sends it as JPEG over the `/camera` WebSocket |
 | 14 | `slides/slide_14_streamlit.md` | What is Streamlit? From raw events to a dashboard |
+| 14 | `slides/slide_14_streamlit_qr.png` | QR code for the online dashboard, pythonid-10-2026.streamlit.app |
 | 14 | `slides/slide_14_publish.py` | Wraps Whisper's `show()` and YOLO's `update()` to also publish the transcript and votes, to the laptop's broker and to the public `broker.hivemq.com` |
 | 15 | `slides/slide_15_subscribe.py` | The dashboard's MQTT subscriber on the public broker: keeps one row of votes per second for 10 minutes (Jakarta time), and the transcript |
 | 16 | `slides/slide_16_dashboard.py` | The Streamlit dashboard: hosted on Streamlit Community Cloud for the audience, and started by the presentation on the laptop with `--local` |
