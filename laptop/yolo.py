@@ -1,4 +1,4 @@
-import threading, tkinter as tk, cv2, slide_mqtt
+import threading, tkinter as tk, cv2, mqtt
 from PIL import Image, ImageTk
 from ultralytics import YOLO
 
@@ -18,7 +18,7 @@ def detect(root, video):
         people, hands = len(raised), sum(raised)
         rgb = cv2.cvtColor(result.plot(), cv2.COLOR_BGR2RGB)
         image = Image.fromarray(rgb).resize((320, 240))
-        slide_mqtt.publish("votes", {"people": people, "hands": hands})
+        mqtt.publish("votes", {"people": people, "hands": hands})
         root.after(0, update, video, image, people, hands)
 
 def update(video, image, people, hands):
