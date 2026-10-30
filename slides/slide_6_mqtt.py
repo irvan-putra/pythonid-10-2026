@@ -1,4 +1,4 @@
-import json, paho.mqtt.client as mqtt
+import json, math, paho.mqtt.client as mqtt
 
 def listen(topics, on_message, userdata=None):
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, userdata=userdata)
@@ -18,7 +18,7 @@ def publish(topic, data, retain=False):
 def on_message(client, led, msg):
     reading = json.loads(msg.payload)
     x, y, z = reading["x"], reading["y"], reading["z"]
-    force = (x * x + y * y + z * z) ** 0.5
+    force = math.sqrt(x * x + y * y + z * z)
     color = "red" if force > 15 else "gray"
     led.after(0, led.config, {"fg": color, "text": f"● Phone: {force:4.1f} m/s²"})
 
