@@ -1,8 +1,8 @@
 import atexit, pathlib, shutil, subprocess
 
-# Local Mosquitto MQTT broker; mosquitto.conf lets the phone on the same Wi-Fi connect
+# Local Mosquitto MQTT broker; slide_4_mosquitto.conf lets the phone on the same Wi-Fi connect
 MOSQUITTO = shutil.which("mosquitto") or r"C:\Program Files\mosquitto\mosquitto.exe"
-CONFIG = pathlib.Path(__file__).with_name("mosquitto.conf")
+CONFIG = pathlib.Path(__file__).with_name("slide_4_mosquitto.conf")
 
 def start(root, go):
     try:

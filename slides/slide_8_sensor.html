@@ -3,7 +3,6 @@
 <title>Phone Sensor</title>
 <button id="start" style="font-size: 2em">📷🎙 Start</button>
 <p id="info" style="font-size: 1.5em"></p>
-<p id="heard" style="font-size: 1.5em"></p>
 <p id="state" style="color: gray"></p>
 <video id="video" playsinline muted style="width: 100%"></video>
 <script>
@@ -27,7 +26,6 @@ async function streamCamera(stream) {
 
 function streamMic(stream, ctx) {
   const ws = socket("audio");
-  ws.onmessage = (event) => (heard.textContent = event.data || "(heard nothing)");
   ws.onclose = () => (state.textContent = "Disconnected from laptop");
   const mic = ctx.createMediaStreamSource(stream);
   const tap = ctx.createScriptProcessor(4096, 1, 1);
@@ -35,7 +33,7 @@ function streamMic(stream, ctx) {
   tap.onaudioprocess = (event) => {
     const samples = event.inputBuffer.getChannelData(0);
     if (ws.readyState === 1) ws.send(samples), sent++;
-    state.textContent = `Sent ${sent} mic chunks · level ${Math.max(...samples).toFixed(2)}`;
+    state.textContent = `🎙 sent ${sent} mic chunks · level ${Math.max(...samples).toFixed(2)}`;
   };
   mic.connect(tap);
   tap.connect(ctx.destination);

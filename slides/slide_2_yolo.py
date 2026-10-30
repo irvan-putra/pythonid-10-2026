@@ -1,6 +1,8 @@
-import threading, tkinter as tk, cv2, slide_4_mqtt as mqtt
+import time, threading, tkinter as tk, cv2, slide_5_mqtt as mqtt
 from PIL import Image, ImageTk
 from ultralytics import YOLO
+
+phone = {"frame": None, "time": 0}  # latest phone camera frame (slide_7_sensor.py)
 
 def hand_up(keypoints):
     y = keypoints[:, 1]  # 9,5 = left wrist/shoulder, 10,6 = right; y: top is 0, visible >0
@@ -9,10 +11,14 @@ def hand_up(keypoints):
 def detect(root, video):
     model = YOLO("yolo11n-pose.pt")
     webcam = cv2.VideoCapture(0)
-    while webcam.isOpened():
-        ok, frame = webcam.read()
-        if not ok:
-            break
+    while True:
+        if time.time() - phone["time"] < 1:  # the phone camera takes over while it streams
+            frame, phone["frame"] = phone["frame"], None
+        else:
+            ok, frame = webcam.read()
+        if frame is None:  # no new phone frame yet, or no webcam
+            time.sleep(0.03)
+            continue
         result = model(frame, verbose=False)[0]
         raised = [hand_up(keypoints) for keypoints in result.keypoints.xy]
         people, hands = len(raised), sum(raised)

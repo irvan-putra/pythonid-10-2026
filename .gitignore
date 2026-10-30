@@ -4,6 +4,3 @@ __pycache__/
 
 # YOLO weights, downloaded on first run
 *.pt
-
-# HTTPS keys for the phone camera/mic pages (phone/README.md)
-*.pem
