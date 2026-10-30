@@ -77,7 +77,7 @@ Phone accelerometer (Termux) ─────► pythonid/sensor ──► sensor
    ```
 4. **Slides 8–13 (phone camera and mic):** on the phone, open `http://<laptop-ip>:8000` in Chrome, tap **📷🎙 Start**, and allow the camera and microphone. While it streams, YOLO uses the phone camera and Whisper uses the phone mic; when the phone stops, both go back to the laptop's.
 5. **Slides 14–16 (dashboard):** the audience opens the **Network URL** on their phones, on the same Wi-Fi.
-6. To stop, close the slides window (this also stops Mosquitto and the phone server), then press **Ctrl+C** in the terminal to stop the dashboard.
+6. The slides open full screen. To stop, close them with **Alt+F4** (this also stops Mosquitto and the phone server), then press **Ctrl+C** in the terminal to stop the dashboard.
 
 ### Controls
 
