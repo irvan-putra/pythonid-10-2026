@@ -17,6 +17,6 @@ def listen(root, go, subtitle):
             root.after(0, go, -1)
 
 def start(root, go):
-    subtitle = tk.Label(root, text="🎙 Listening...", font=("Consolas", 12))
-    subtitle.pack(side="bottom", pady=10)
+    subtitle = tk.Label(root, text="🎙 Listening...", font=("Consolas", 12), wraplength=320)
+    subtitle.pack()
     threading.Thread(target=listen, args=(root, go, subtitle), daemon=True).start()

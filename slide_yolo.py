@@ -28,5 +28,5 @@ def update(video, image, people, hands):
 
 def start(root):
     video = tk.Label(root, text="📷 Starting YOLO Pose...", font=("Consolas", 12))
-    video.pack(side="right", padx=20)
+    video.pack()
     threading.Thread(target=detect, args=(root, video), daemon=True).start()

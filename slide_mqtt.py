@@ -26,5 +26,5 @@ def on_message(client, led, msg):
 def start(root):
     import tkinter as tk  # only the presentation needs Tk; the dashboard imports this file too
     led = tk.Label(root, text="● Waiting for phone...", font=("Consolas", 12), fg="gray")
-    led.pack(side="bottom")
+    led.pack(pady=5)
     listen(["sensor"], on_message, led)

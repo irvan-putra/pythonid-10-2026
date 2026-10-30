@@ -5,12 +5,8 @@ read = lambda path: open(path, encoding="utf-8").read()
 slides = [
     "Edge AI & Multimodal Applications in Python",
     read(__file__),
-    read("slide_whisper.py"),
-    read("slide_yolo.py"),
-    read("slide_broker.py"),
-    read("slide_mqtt.py"),
-    read("phone/sensor_termux.py"),
-    read("slide_streamlit.py"),
+    *map(read, ["slide_whisper.py", "slide_yolo.py", "slide_broker.py", "slide_mqtt.py"]),
+    *map(read, ["phone/sensor_termux.py", "slide_streamlit.py"]),
 ]
 slide = 0
 
@@ -24,10 +20,12 @@ def go(step=0):
     slide = (slide + step) % len(slides)
     label.config(text=slides[slide])
 
-slide_whisper.start(root, go)
-slide_yolo.start(root)
+panel = tk.Frame(root)  # right column, top to bottom: camera, phone LED, subtitle
+panel.pack(side="right", padx=20)
+slide_yolo.start(panel)
 slide_broker.start()
-slide_mqtt.start(root)
+slide_mqtt.start(panel)
+slide_whisper.start(panel, go)
 label.pack(side="left", expand=True, fill="both", padx=10)  # last: fills the space left over
 slide_streamlit.start()
 root.bind("<Left>", lambda event: go(-1))
