@@ -4,7 +4,8 @@ sys.path.insert(0, "slides")
 repo = "github.com/irvan-putra\n/pythonid-10-2026\n/blob/main/\n"
 order = lambda path: (int(path.name.split("_")[1]), path.suffix == ".py", path.name)
 files = sorted(pathlib.Path("slides").glob("slide_*"), key=order)
-slides, slide = [files[0], pathlib.Path(pathlib.Path(__file__).name), *files[1:]], 0
+intro = sum(order(path)[0] == 0 for path in files)
+slides, slide = [*files[:intro], pathlib.Path(pathlib.Path(__file__).name), *files[intro:]], 0
 
 root = tk.Tk()
 root.attributes("-fullscreen", True)
