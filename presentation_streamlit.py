@@ -12,21 +12,25 @@ if __name__ == "__main__":
     def live_charts():
         try:
             rows, live = read()
-            df, now = pd.DataFrame(rows), rows[-1]
+            history, latest = pd.DataFrame(rows), rows[-1]
         except Exception:
             return st.info("⏳ Waiting for votes...")
-        slide = df[df.slide == now["slide"]]
-        df.t, approval = pd.to_datetime(df.t, unit="s"), now["hands"] / max(now["people"], 1)
+        this_slide = history[history.slide == latest["slide"]]
+        reaction = this_slide["time"][this_slide.hands.idxmax()] - this_slide["time"].min()  # seconds
+        history["time"] = pd.to_datetime(history["time"], unit="s")
+        approval = latest["hands"] / max(latest["people"], 1)
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric("👥 People", now["people"], f"record {df.people.max()}", delta_color="off")
-        c2.metric("✋ Votes", now["hands"], f"record {df.hands.max()}", delta_color="off")
+        c1.metric("👥 People", latest["people"], f"record {history.people.max()}", delta_color="off")
+        c2.metric("✋ Votes", latest["hands"], f"record {history.hands.max()}", delta_color="off")
         c3.metric("👍 Approval", f"{approval:.0%}")
-        c4.metric("⏱ Reaction", f"{slide.t[slide.hands.idxmax()] - slide.t.min():.0f}s")
+        c4.metric("⏱ Reaction", f"{reaction:.0f}s")
         st.progress(min(approval, 1.0))
-        st.area_chart(df.set_index("t")[["people", "hands"]], x_label="Time", y_label="Energy")
-        a, b = st.columns(2)
-        a.bar_chart(pd.DataFrame([{"✋ Up": now["hands"], "🙅 Down": now["people"] - now["hands"]}], index=["Room"]), horizontal=True)
-        b.bar_chart({"⬅ Left hand": now["left"], "Right hand ➡": now["right"]}, y_label="Hands", sort=False)
+        st.area_chart(history.set_index("time")[["people", "hands"]], x_label="Time", y_label="Energy")
+        up_down, left_right = st.columns(2)
+        room = {"✋ Up": latest["hands"], "🙅 Down": latest["people"] - latest["hands"]}
+        up_down.bar_chart(pd.DataFrame([room], index=["Room"]), horizontal=True)
+        hands = {"⬅ Left hand": latest["left"], "Right hand ➡": latest["right"]}
+        left_right.bar_chart(hands, y_label="Hands", sort=False)
         st.bar_chart(pd.Series(live["slides"], dtype=int), x_label="Slide", y_label="Most hands")
         cloud = WordCloud(width=800, height=300, background_color="white")
         if words := cloud.process_text(live["text"]):
