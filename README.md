@@ -27,10 +27,12 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
 | 5 | `slides/slide_5_mosquitto.conf` | The broker config that lets the phone on the same Wi-Fi connect |
 | 6 | `slides/slide_6_mqtt.py` | MQTT helpers (`listen`, `publish`) and the phone's force reading: shaking the phone turns it red |
 | 7 | `slides/slide_7_termux.md` | What is Termux? |
+| 7 | `slides/slide_7_termux_phone.png` | Screenshot: Termux on the phone, reading the accelerometer and starting the script |
 | 7 | `slides/slide_7_termux.py` | Runs on the phone in Termux and publishes its accelerometer to the broker |
 | 8 | `slides/slide_8_websocket.md` | FastAPI and WebSockets |
 | 8 | `slides/slide_8_sensor.py` | A FastAPI server on port 8000 that serves the phone page and its scripts |
 | 9 | `slides/slide_9_sensor.html` | The page the phone opens to stream its camera and mic over WebSockets |
+| 9 | `slides/slide_9_sensor_phone.png` | Screenshot: that page on the phone, streaming the camera and mic |
 | 10 | `slides/slide_10_monkeypatch.md` | Monkeypatching and duck typing, used on slides 10 and 12 |
 | 10 | `slides/slide_10_phone_mic.py` | Receives the phone mic and replaces Whisper's `record()`: the phone mic while it's connected, else the laptop mic |
 | 11 | `slides/slide_11_phone_mic.js` | The phone side: streams the mic over the `/audio` WebSocket |
@@ -115,7 +117,7 @@ Phone accelerometer (Termux) ─────► pythonid/sensor  ──► phone
 
 ### Showing the phone's screen
 
-To let the audience see Termux or the phone page, mirror the phone on the laptop with [scrcpy](https://github.com/Genymobile/scrcpy) (free and open source): turn on **USB debugging** in the phone's Developer options, connect it by USB, and run `scrcpy.exe` from the Windows release zip.
+Slides 7 and 9 include screenshots of Termux and the phone page, so the audience sees the phone side even without mirroring. To show it live, mirror the phone on the laptop with [scrcpy](https://github.com/Genymobile/scrcpy) (free and open source): turn on **USB debugging** in the phone's Developer options, connect it by USB, and run `scrcpy.exe` from the Windows release zip.
 
 ## 📊 Live Dashboard
 
