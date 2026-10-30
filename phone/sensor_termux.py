@@ -1,6 +1,6 @@
 import sys, json, subprocess, paho.mqtt.client as mqtt
 
-# Runs on the phone (Termux): python phone_sensor_termux.py <laptop-ip>
+# Runs on the phone (Termux): python sensor_termux.py <laptop-ip>
 client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 client.connect(sys.argv[1])
 client.loop_start()

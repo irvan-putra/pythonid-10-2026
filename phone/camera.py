@@ -21,7 +21,7 @@ threading.Thread(target=detect, daemon=True).start()
 
 @app.get("/")
 def page():
-    return FileResponse(pathlib.Path(__file__).with_name("phone_camera.html"))
+    return FileResponse(pathlib.Path(__file__).with_name("camera.html"))
 
 @app.websocket("/camera")
 async def camera(ws: WebSocket):

@@ -1,6 +1,6 @@
 import json, tkinter as tk, paho.mqtt.client as mqtt
 
-# Phone accelerometer -> MQTT -> Python (phone side: experiments/phone_sensor_termux.py)
+# Phone accelerometer -> MQTT -> Python (phone side: phone/sensor_termux.py)
 def on_message(client, led, msg):
     reading = json.loads(msg.payload)
     x, y, z = reading["x"], reading["y"], reading["z"]

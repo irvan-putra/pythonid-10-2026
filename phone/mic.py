@@ -11,7 +11,7 @@ def transcribe(audio):
 
 @app.get("/")
 def page():
-    return FileResponse(pathlib.Path(__file__).with_name("phone_mic.html"))
+    return FileResponse(pathlib.Path(__file__).with_name("mic.html"))
 
 @app.websocket("/audio")
 async def audio(ws: WebSocket):
