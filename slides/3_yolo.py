@@ -1,6 +1,7 @@
-import threading, tkinter as tk, cv2, mqtt
+import threading, importlib, tkinter as tk, cv2
 from PIL import Image, ImageTk
 from ultralytics import YOLO
+mqtt = importlib.import_module("5_mqtt")  # file names start with the slide number
 
 def hand_up(keypoints):
     y = keypoints[:, 1]  # 9,5 = left wrist/shoulder, 10,6 = right; y: top is 0, visible >0
@@ -26,7 +27,7 @@ def update(video, image, people, hands):
     text = f"👥 People: {people} | ✋ Hands: {hands}"
     video.config(image=video.photo, text=text, compound="top")
 
-def start(root):
+def start(root, go):
     video = tk.Label(root, text="📷 Starting YOLO Pose...", font=("Consolas", 12))
     video.pack()
     threading.Thread(target=detect, args=(root, video), daemon=True).start()

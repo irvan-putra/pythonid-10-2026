@@ -1,7 +1,8 @@
-import json, time, subprocess, sys, collections, pandas as pd, streamlit as st, mqtt
+import json, time, importlib, subprocess, sys, collections, pandas as pd, streamlit as st
 from wordcloud import WordCloud
+mqtt = importlib.import_module("5_mqtt")  # file names start with the slide number
 
-def start():
+def start(root, go):
     subprocess.Popen([sys.executable, "-m", "streamlit", "run", __file__])
 
 @st.cache_resource  # one MQTT subscriber, shared by every phone viewing the dashboard

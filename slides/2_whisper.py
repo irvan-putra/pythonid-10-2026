@@ -1,5 +1,6 @@
-import threading, tkinter as tk, sounddevice as sd, mqtt
+import threading, importlib, tkinter as tk, sounddevice as sd
 from faster_whisper import WhisperModel
+mqtt = importlib.import_module("5_mqtt")  # file names start with the slide number
 
 def listen(root, go, subtitle):
     model, transcript = WhisperModel("tiny.en", compute_type="int8"), ""
@@ -18,5 +19,5 @@ def listen(root, go, subtitle):
 
 def start(root, go):
     subtitle = tk.Label(root, text="🎙 Listening...", font=("Consolas", 12), wraplength=320)
-    subtitle.pack()
+    subtitle.pack(side="bottom")
     threading.Thread(target=listen, args=(root, go, subtitle), daemon=True).start()

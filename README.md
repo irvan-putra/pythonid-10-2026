@@ -4,13 +4,14 @@ A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **F
 
 ## Slides & Scripts
 
-1. **`presentation.py`** — Main Tkinter presentation engine (loads its own source code on Slide 1 and chains the remaining slides).
-2. **`laptop/whisper.py`** — Live voice slide navigation (`"next"` / `"back"`) and subtitle transcription using `faster-whisper` (`tiny.en`, `int8`) and `sounddevice`. Publishes the transcript to the `pythonid/speech` topic.
-3. **`laptop/yolo.py`** — Live webcam people & 17-keypoint pose estimation (`yolo11n-pose.pt`) with raised-hand vote counting. Publishes the counts on every frame to the `pythonid/votes` topic.
-4. **`laptop/broker.py`** — Starts the local [Mosquitto](https://mosquitto.org/download/) MQTT broker with `laptop/mosquitto.conf` when the presentation starts, and stops it when the window closes.
-5. **`laptop/mqtt.py`** — Shared MQTT helpers (`listen`, `publish`), and the phone accelerometer (`pythonid/sensor` topic) driving a Python loop: shaking the phone lights a red "LED" in the presentation window.
-6. **`phone/termux.py`** — Runs on the phone in Termux and publishes its accelerometer readings to the broker.
-7. **`laptop/dashboard.py`** — Real-time Streamlit audience dashboard (`@st.fragment(run_every=1)`) that subscribes to the votes and speech topics.
+Slide 0 is the title. **`presentation.py`** is slide 1: the Tkinter presentation engine, which shows its own source code and then every file in [`slides/`](slides/) in order. Each file name starts with its slide number, the current file name is shown above the camera, and each slide module with a `start(panel, go)` function adds its part of the live demo.
+
+2. **`slides/2_whisper.py`** — Live voice slide navigation (`"next"` / `"back"`) and subtitle transcription using `faster-whisper` (`tiny.en`, `int8`) and `sounddevice`. Publishes the transcript to the `pythonid/speech` topic.
+3. **`slides/3_yolo.py`** — Live webcam people & 17-keypoint pose estimation (`yolo11n-pose.pt`) with raised-hand vote counting. Publishes the counts on every frame to the `pythonid/votes` topic.
+4. **`slides/4_broker.py`** — Starts the local [Mosquitto](https://mosquitto.org/download/) MQTT broker with `slides/mosquitto.conf` when the presentation starts, and stops it when the window closes.
+5. **`slides/5_mqtt.py`** — Shared MQTT helpers (`listen`, `publish`), and the phone accelerometer (`pythonid/sensor` topic) driving a Python loop: shaking the phone lights a red "LED" in the presentation window.
+6. **`slides/6_termux.py`** — Runs on the phone in Termux and publishes its accelerometer readings to the broker. The presentation only shows it.
+7. **`slides/7_dashboard.py`** — Real-time Streamlit audience dashboard (`@st.fragment(run_every=1)`) that subscribes to the votes and speech topics.
 
 ```
 Phone accelerometer ──► pythonid/sensor ──► sensor LED in the presentation
@@ -50,8 +51,8 @@ Allow Python and Mosquitto through the Windows firewall when asked, so phones on
 - **Left / Right Arrow Keys**: Navigate slides
 - **Voice Commands**: Say **"next"** or **"back"** into your microphone
 - **Raise Hand in Webcam**: Increments the live raised-hand vote count in Tkinter and the Streamlit dashboard
-- **Shake the Phone**: Lights the sensor LED. Run [`phone/termux.py`](phone/termux.py) on the phone with the laptop's IP; see [phone/README.md](phone/README.md) for the one-time setup.
+- **Shake the Phone**: Lights the sensor LED. Run [`slides/6_termux.py`](slides/6_termux.py) on the phone with the laptop's IP; see [phone/README.md](phone/README.md) for the one-time setup.
 
 ## Phone as a Sensor
 
-Scripts that run on the laptop live in [`laptop/`](laptop/), and the one that runs on the phone is [`phone/termux.py`](phone/termux.py). [phone/README.md](phone/README.md) covers using a smartphone as the sensor over local Wi-Fi: the accelerometer over MQTT (part of the presentation), plus a standalone page that streams the phone's camera into YOLO and its microphone into Whisper, served over WebSockets by `laptop/phone.py`.
+[phone/README.md](phone/README.md) covers using a smartphone as the sensor over local Wi-Fi: the accelerometer over MQTT (part of the presentation), plus a standalone page that streams the phone's camera into YOLO and its microphone into Whisper, served over WebSockets by `laptop/phone.py`.

@@ -15,7 +15,7 @@ sender.loop_start()
 def publish(topic, data, retain=False):  # retain: broker keeps the last one for new subscribers
     sender.publish(f"pythonid/{topic}", json.dumps(data), retain=retain)
 
-# Phone accelerometer -> MQTT -> Python (phone side: phone/termux.py)
+# Phone accelerometer -> MQTT -> Python (phone side: 6_termux.py)
 def on_message(client, led, msg):
     reading = json.loads(msg.payload)
     x, y, z = reading["x"], reading["y"], reading["z"]
@@ -23,7 +23,7 @@ def on_message(client, led, msg):
     color = "red" if force > 15 else "gray"  # shake = LED on (or serial.write to an Arduino)
     led.after(0, led.config, {"fg": color, "text": f"● Phone: {force:4.1f} m/s²"})
 
-def start(root):
+def start(root, go):
     import tkinter as tk  # only the presentation needs Tk; the dashboard imports this file too
     led = tk.Label(root, text="● Waiting for phone...", font=("Consolas", 12), fg="gray")
     led.pack(pady=5)
