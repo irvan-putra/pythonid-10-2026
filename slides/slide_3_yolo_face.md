@@ -14,7 +14,7 @@ Face detectors are YOLO models trained on faces instead:
 Uses: counting faces, blurring faces for privacy, checking who is
 looking at the camera.
 
-Detection is not recognition: knowing *who* a face is needs another
+Detection is not recognition: knowing who a face is needs another
 model (e.g. ArcFace), and consent. Faces are biometric personal data
 under Indonesia's personal data protection law (UU PDP, 2022).
 
