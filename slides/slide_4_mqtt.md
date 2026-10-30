@@ -12,5 +12,8 @@ What is MQTT?
 - Publishers never need to know who is listening
 - QoS 0 / 1 / 2: at most once / at least once / exactly once
 - Retained message: the broker keeps the last one for new subscribers
+- Bridge: a local "edge" broker forwards some topics to a cloud broker,
+  and keeps working when the internet is down
 
-Here: Mosquitto is the broker (port 1883), paho-mqtt the Python client
+Here: Mosquitto on the laptop (port 1883), bridged to the free public
+broker.hivemq.com; paho-mqtt is the Python client

@@ -1,6 +1,6 @@
 # Edge AI & Multimodal Applications in Python
 
-A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **Faster-Whisper**, **Ultralytics YOLO11 Pose**, **MQTT**, **FastAPI**, and **Streamlit**, using a smartphone as a sensor. Everything runs on the laptop and the local Wi-Fi: no cloud service, no account, no internet needed during the talk.
+A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **Faster-Whisper**, **Ultralytics YOLO11 Pose**, **MQTT**, **FastAPI**, and **Streamlit**, using a smartphone as a sensor. The AI and the phone sensors run on the laptop and the local Wi-Fi; the laptop's MQTT broker also forwards the dashboard's data to a free public broker, so the audience can follow it online at **https://pythonid-10-2026.streamlit.app**. If the internet drops, everything on the laptop keeps working.
 
 ## Slides
 
@@ -19,7 +19,7 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
 | 3 | `slides/slide_3_coco.png` | The COCO pose keypoints, and how a raised hand is detected |
 | 4 | `slides/slide_4_mqtt.md` | What is MQTT? |
 | 4 | `slides/slide_4_broker.py` | The "Waiting for phone..." line: the laptop runs a local [Mosquitto](https://mosquitto.org/download/) MQTT broker, started with the presentation and stopped when the window closes |
-| 5 | `slides/slide_5_mosquitto.conf` | The broker config that lets the phone on the same Wi-Fi connect |
+| 5 | `slides/slide_5_mosquitto.conf` | The broker config that lets the phone on the same Wi-Fi connect, and bridges the votes and speech topics to the public `broker.hivemq.com` |
 | 6 | `slides/slide_6_mqtt.py` | MQTT helpers (`listen`, `publish`) and the sensor LED: shaking the phone turns it red |
 | 7 | `slides/slide_7_termux.md` | What is Termux? |
 | 7 | `slides/slide_7_termux.py` | Runs on the phone in Termux and publishes its accelerometer to the broker |
@@ -33,14 +33,14 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
 | 13 | `slides/slide_13_phone_camera.js` | The phone side: rotates each camera frame to match how the phone is held (from gravity, via `devicemotion`), then sends it as JPEG over the `/camera` WebSocket |
 | 14 | `slides/slide_14_streamlit.md` | What is Streamlit? From raw events to a dashboard |
 | 14 | `slides/slide_14_publish.py` | Wraps Whisper's `show()` and YOLO's `update()` to also publish the transcript and votes to MQTT |
-| 15 | `slides/slide_15_subscribe.py` | The dashboard's MQTT subscriber: keeps one row of votes per second for 10 minutes, and the transcript |
-| 16 | `slides/slide_16_dashboard.py` | The local Streamlit dashboard with all the live data |
+| 15 | `slides/slide_15_subscribe.py` | The dashboard's MQTT subscriber on the public broker: keeps one row of votes per second for 10 minutes (Jakarta time), and the transcript |
+| 16 | `slides/slide_16_dashboard.py` | The Streamlit dashboard, hosted on Streamlit Community Cloud |
 
 ```
-Laptop or phone camera ──► YOLO ──► pythonid/votes  ──► Streamlit dashboard (1 row per second)
-Laptop or phone mic ──► Whisper ──► pythonid/speech ──► Streamlit word cloud (retained message)
-Phone accelerometer (Termux) ─────► pythonid/sensor ──► sensor LED in the presentation
-                     all through the local Mosquitto broker
+                                  laptop: Mosquitto (edge)          internet: broker.hivemq.com (cloud)
+Laptop or phone camera ──► YOLO ──► pythonid/votes  ──── bridge ───► irvan-putra/pythonid-10-2026/votes  ──► online dashboard
+Laptop or phone mic ──► Whisper ──► pythonid/speech ──── bridge ───► irvan-putra/pythonid-10-2026/speech ──► word cloud
+Phone accelerometer (Termux) ─────► pythonid/sensor ──► sensor LED in the presentation (stays on the laptop)
 ```
 
 ## Setup (one time)
@@ -78,14 +78,14 @@ Phone accelerometer (Termux) ─────► pythonid/sensor ──► sensor
    ```bash
    python presentation.py
    ```
-   This opens the slides and starts the Mosquitto broker, the phone server (port 8000) and the Streamlit dashboard (port 8501). Streamlit prints a **Network URL** like `http://192.168.1.67:8501` in the terminal; that IP is the laptop's IP (`ipconfig` shows it too).
+   This opens the slides and starts the Mosquitto broker (bridged to the public broker) and the phone server (port 8000). Find the laptop's IP for the phone with `ipconfig` (IPv4 Address).
 3. **Slides 4–7 (MQTT):** on the phone, in Termux, run the script with the laptop's IP, then shake the phone to turn the LED red:
    ```bash
    python slide_7_termux.py <laptop-ip>
    ```
 4. **Slides 8–13 (phone camera and mic):** on the phone, open `http://<laptop-ip>:8000` in Chrome, tap **📷🎙 Start**, and allow the camera and microphone. While it streams, YOLO uses the phone camera and Whisper uses the phone mic; when the phone stops, both go back to the laptop's.
-5. **Slides 14–16 (dashboard):** the audience opens the **Network URL** on their phones, on the same Wi-Fi.
-6. The slides open full screen. To stop, close them with **Alt+F4** (this also stops Mosquitto and the phone server), then press **Ctrl+C** in the terminal to stop the dashboard.
+5. **Slides 14–16 (dashboard):** the audience opens **https://pythonid-10-2026.streamlit.app** on their phones, over their own mobile data or any Wi-Fi.
+6. The slides open full screen. To stop, close them with **Alt+F4**; this also stops Mosquitto and the phone server.
 
 ### Controls
 
@@ -107,12 +107,16 @@ How the data gets there:
 - YOLO publishes a raw stream, one message per camera frame. The dashboard keeps one row per second for 10 minutes, so the history stays small however fast the camera runs.
 - The dashboard has one MQTT subscriber (`st.cache_resource`), shared by every phone viewing it.
 - Whisper publishes the whole transcript so far as a **retained** message. The broker keeps the last one and hands it to any subscriber that connects later, so the word cloud is complete even if the dashboard is first opened mid-talk.
+- The laptop's Mosquitto **bridges** only the votes and speech topics to the free public broker `broker.hivemq.com`, renamed under `irvan-putra/pythonid-10-2026/` so they don't clash with other users. The phone sensor stays on the laptop.
 
-The same dashboard is also deployed at https://pythonid-10-2026.streamlit.app as an example of free Streamlit hosting. That copy can't reach the laptop, so it shows "Waiting for votes..." instead of live data.
+The dashboard is hosted on [Streamlit Community Cloud](https://streamlit.io/cloud) with **`slides/slide_16_dashboard.py`** as its main file; it installs the small [`slides/requirements.txt`](slides/requirements.txt) next to it instead of the full presentation requirements. Open it once before the talk: free apps go to sleep when nobody has used them for a while.
+
+A public broker has no password: anyone can read these topics, or publish to them. That's fine for vote counts and the talk's own transcript, but never send private data through it; for that, use a broker with logins, such as a free HiveMQ Cloud account.
 
 ## Troubleshooting
 
 - **The LED stays on "Waiting for phone...":** the Mosquitto Windows service may still be running (`net stop mosquitto`), the IP may be wrong, or the phone may be on another Wi-Fi. If the terminal says `Mosquitto not found`, install it.
 - **The phone page's Start button does nothing:** the address in the Chrome flag must match the address bar exactly (`http://`, the IP and `:8000`).
 - **The phone page says `Error: Permission denied`:** check that Chrome **⋮ → Settings → Site settings → Camera** and **Microphone** are on, that Android **Settings → Apps → Chrome → Permissions** allows both, and on Samsung that **Camera access** and **Mic access** are on in Quick Settings. Then reopen the page and tap **Allow**.
-- **Phones can't open the dashboard or the phone page:** check the firewall prompt and that the Wi-Fi is set to **Private**.
+- **The phone can't open the phone page:** check the firewall prompt and that the Wi-Fi is set to **Private**.
+- **The online dashboard stays on "Waiting for votes...":** the laptop needs internet for the bridge; the Mosquitto output in the terminal shows whether the `cloud` bridge connected.

@@ -13,4 +13,7 @@ From raw events to a dashboard:
 - subscribe: keep 1 row per second for 10 minutes (600 rows)
 - dashboard: people, votes and approval, their trend, a word cloud
 
-Here: open http://<laptop-ip>:8501 on your phone
+Streamlit Community Cloud hosts it for free, straight from GitHub.
+It reads the data from the public MQTT broker on the internet.
+
+Here: open https://pythonid-10-2026.streamlit.app on your phone

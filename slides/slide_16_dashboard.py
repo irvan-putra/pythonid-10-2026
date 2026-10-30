@@ -1,8 +1,5 @@
-import subprocess, sys, pandas as pd, streamlit as st, slide_15_subscribe as subscribe
+import pandas as pd, streamlit as st, slide_15_subscribe as subscribe
 from wordcloud import WordCloud
-
-def start(root, go):
-    subprocess.Popen([sys.executable, "-m", "streamlit", "run", __file__])
 
 if __name__ == "__main__":
     @st.fragment(run_every=1)
