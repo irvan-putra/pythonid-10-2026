@@ -3,7 +3,7 @@ import os, json, time, urllib.request
 URL = os.environ.get("UPSTASH_REDIS_REST_URL", "http://localhost:8079")  # default: local Redis, see README
 TOKEN = os.environ.get("UPSTASH_REDIS_REST_TOKEN", "local_token")
 live, last_push = {"text": ""}, 0
-KEEP = "599"  # history: newest 600 rows ≈ 10 minutes at one push per second
+KEEP = 60 * 10  # seconds of history to keep
 
 def redis(*commands):
     headers = {"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json"}
@@ -18,10 +18,10 @@ def push(people, hands):
     row = json.dumps({"time": last_push, "people": people, "hands": hands})
     live_json = json.dumps(live)
     try:
-        redis(["LPUSH", "history", row], ["LTRIM", "history", "0", KEEP], ["SET", "live", live_json])
+        redis(["LPUSH", "history", row], ["LTRIM", "history", 0, KEEP - 1], ["SET", "live", live_json])
     except Exception as error:
         print("push failed:", error, flush=True)
 
 def read():
-    rows, live_json = redis(["LRANGE", "history", "0", KEEP], ["GET", "live"])
+    rows, live_json = redis(["LRANGE", "history", 0, KEEP - 1], ["GET", "live"])
     return [json.loads(row) for row in rows[::-1]], json.loads(live_json)
