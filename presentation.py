@@ -1,6 +1,7 @@
 import sys, pathlib, importlib, tkinter as tk
 
 sys.path.insert(0, "slides")
+repo = "github.com/irvan-putra\n/pythonid-10-2026\n/blob/main/\n"
 order = lambda path: (int(path.name.split("_")[1]), path.suffix != ".md")
 files = sorted(pathlib.Path("slides").glob("slide_*"), key=order)
 slides, slide = [files[0], pathlib.Path(pathlib.Path(__file__).name), *files[1:]], 0
@@ -18,7 +19,7 @@ def go(step=0):
     slide = (slide + step) % len(slides)
     path = slides[slide]
     ctx.image = tk.PhotoImage(file=path) if path.suffix == ".png" else ""
-    filename.config(text=path.as_posix())
+    filename.config(text=repo + path.as_posix())
     ctx.config(text="" if ctx.image else path.read_text(encoding="utf-8"), image=ctx.image)
 
 modules = [importlib.import_module(path.stem) for path in files if path.suffix == ".py"]
