@@ -7,7 +7,8 @@ A minimal, self-reading ("quine-style") presentation built with **Tkinter**, **F
 1. **`presentation.py`** — Main Tkinter presentation engine (loads its own source code on Slide 1 and chains the remaining slides).
 2. **`presentation_whisper.py`** — Live voice slide navigation (`"next"` / `"back"`) and subtitle transcription using `faster-whisper` (`tiny.en`, `int8`) and `sounddevice`.
 3. **`presentation_yolo.py`** — Live webcam people & 17-keypoint pose estimation (`yolo11n-pose.pt`) with raised-hand vote counting.
-4. **`presentation_streamlit.py`** — Real-time Streamlit audience voting dashboard (`@st.fragment(run_every=1)`) displaying live people & raised-hand vote charts.
+4. **`presentation_redis.py`** — Tiny Upstash Redis REST relay (`push` / `read`) that sends live votes from the laptop to the deployed dashboard.
+5. **`presentation_streamlit.py`** — Real-time Streamlit audience voting dashboard (`@st.fragment(run_every=1)`) displaying live people & raised-hand vote charts.
 
 ## 🌐 Live Dashboard
 
@@ -33,8 +34,8 @@ The deployed app runs on Streamlit Community Cloud, which can't see `votes.txt` 
 Laptop (YOLO) --SET votes "people,hands"--> Upstash Redis <--GET votes (every 1s)-- pythonid-10-2026.streamlit.app
 ```
 
-- `presentation_yolo.py` calls `presentation_streamlit.push(people, hands)` from its detection thread. Pushes are throttled to one per second so they don't slow down the webcam loop.
-- The dashboard's `read()` is wrapped in `@st.cache_data(ttl=1)`. All audience sessions share one Redis `GET` per second, which keeps usage well inside the free tier.
+- `presentation_yolo.py` calls `presentation_redis.push(people, hands)` from its detection thread. Pushes are throttled to one per second so they don't slow down the webcam loop.
+- The dashboard wraps `presentation_redis.read()` in `st.cache_data(ttl=1)`. All audience sessions share one Redis `GET` per second, which keeps usage well inside the free tier.
 - If the Upstash variables aren't set, everything falls back to the local `votes.txt` file, so offline use still works.
 
 ### Setup
