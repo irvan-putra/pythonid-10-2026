@@ -1,20 +1,30 @@
-import subprocess, sys, pandas as pd, streamlit as st, presentation_redis
+import json, time, subprocess, sys, collections, pandas as pd, streamlit as st, presentation_mqtt
 from wordcloud import WordCloud
 
 def start():
     subprocess.Popen([sys.executable, "-m", "streamlit", "run", __file__])
 
-if __name__ == "__main__":
-    read = st.cache_data(ttl=1)(presentation_redis.read)
+@st.cache_resource  # one MQTT subscriber, shared by every phone viewing the dashboard
+def live():
+    data = {"history": collections.deque(maxlen=60 * 10), "text": "", "last": 0}  # 10 minutes
+    def on_message(client, userdata, msg):
+        if msg.topic == "pythonid/speech":
+            data["text"] = json.loads(msg.payload)  # the whole transcript so far
+        elif time.time() - data["last"] >= 1:  # YOLO sends every frame: keep 1 row per second
+            data["last"] = time.time()
+            data["history"].append({"time": data["last"], **json.loads(msg.payload)})
+    presentation_mqtt.listen(["votes", "speech"], on_message)
+    return data
 
+if __name__ == "__main__":
     @st.fragment(run_every=1)
     def live_charts():
-        try:
-            rows, live = read()
-            history, latest = pd.DataFrame(rows), rows[-1]
-        except Exception:
+        data = live()
+        if not data["history"]:
             return st.info("⏳ Waiting for votes...")
+        history = pd.DataFrame(list(data["history"]))
         history["time"] = pd.to_datetime(history["time"], unit="s")
+        latest = history.iloc[-1]
         approval = latest["hands"] / max(latest["people"], 1)
         c1, c2, c3 = st.columns(3)
         c1.metric("👥 People", latest["people"], f"record {history.people.max()}")
@@ -22,7 +32,7 @@ if __name__ == "__main__":
         c3.metric("👍 Approval", f"{approval:.0%}")
         st.area_chart(history.set_index("time")[["people", "hands"]])
         cloud = WordCloud(width=800, height=300, background_color="white")
-        if words := cloud.process_text(live["text"]):
+        if words := cloud.process_text(data["text"]):
             st.image(cloud.generate_from_frequencies(words).to_image())
 
     live_charts()

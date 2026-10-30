@@ -8,11 +8,10 @@ slides = [
     read(__file__),
     read("presentation_whisper.py"),
     read("presentation_yolo.py"),
-    read("presentation_streamlit.py"),
-    read("presentation_redis.py"),
     read("presentation_broker.py"),
     read("presentation_mqtt.py"),
     read("phone/sensor_termux.py"),
+    read("presentation_streamlit.py"),
 ]
 slide = 0
 
