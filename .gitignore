@@ -1,8 +1,6 @@
 __pycache__/
 *.pyc
 *.pt
-votes.txt
-live.json
 app/
 build/
 *.apk

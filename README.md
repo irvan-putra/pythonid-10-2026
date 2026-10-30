@@ -32,17 +32,17 @@ python presentation.py
 
 ## Pushing Votes from the Laptop to the Deployed Dashboard
 
-The deployed app runs on Streamlit Community Cloud, which can't see `votes.txt` on the presenter's laptop and can't receive incoming requests. So both sides talk to a small shared key-value store, a free [Upstash Redis](https://upstash.com) database, through its REST API:
+The deployed app runs on Streamlit Community Cloud, which can't reach the presenter's laptop and can't receive incoming requests. So both sides talk to a small shared key-value store, a free [Upstash Redis](https://upstash.com) database, through its REST API:
 
 ```
-Laptop (YOLO + Whisper + slides) --LPUSH history / SET live--> Upstash Redis <--LRANGE history / GET live (every 1s)-- pythonid-10-2026.streamlit.app
+Laptop (YOLO + Whisper) --LPUSH history / SET live--> Upstash Redis <--LRANGE history / GET live (every 1s)-- pythonid-10-2026.streamlit.app
 ```
 
 - `presentation_yolo.py` calls `presentation_redis.push(people, hands)` from its detection thread with the people and raised-hand counts. Pushes are throttled to one per second (one pipelined HTTP request) so they don't slow down the webcam loop.
 - `presentation_whisper.py` appends the transcript to `presentation_redis.live`, which rides along with each push.
 - Redis keeps two keys: `history`, a list of the last 600 one-second snapshots (10 minutes), and `live`, the full transcript.
 - The dashboard wraps `presentation_redis.read()` in `st.cache_data(ttl=1)`. All audience sessions share one Redis read per second, which keeps usage well inside the free tier.
-- If the Upstash variables aren't set, everything falls back to local `votes.txt` (history) and `live.json` files, so offline use still works. Delete an old `votes.txt` from before this change, as its format is different.
+- If the Upstash variables aren't set, `presentation_redis.py` defaults to a local Redis at `http://localhost:8079` with token `local_token` (see [Local Redis](#local-redis-optional) below).
 
 ### Setup
 
@@ -62,3 +62,25 @@ Laptop (YOLO + Whisper + slides) --LPUSH history / SET live--> Upstash Redis <--
    On Windows PowerShell, use `$env:UPSTASH_REDIS_REST_URL="..."` instead.
 
 Never commit the token. Keep it in Streamlit secrets and in your shell environment only.
+
+### Local Redis (optional)
+
+To rehearse offline, run Redis on your laptop instead of Upstash. Plain Redis doesn't speak Upstash's REST API, so put [Serverless Redis HTTP (SRH)](https://github.com/hiett/serverless-redis-http) in front of it. With [Docker](https://www.docker.com/products/docker-desktop/) installed:
+
+```bash
+docker network create redis-net
+docker run -d --name redis --network redis-net redis
+docker run -d --name redis-http --network redis-net -p 8079:80 -e SRH_MODE=env -e SRH_TOKEN=local_token -e SRH_CONNECTION_STRING="redis://redis:6379" hiett/serverless-redis-http
+```
+
+Then leave the `UPSTASH_*` variables unset (or remove them) and run both sides on the laptop:
+
+```bash
+python presentation.py
+```
+
+The presentation and the local dashboard at http://localhost:8501 both use the defaults (`http://localhost:8079`, `local_token`). The deployed dashboard can't reach your laptop, so it stays on "Waiting for votes..." in this mode.
+
+To stop it later: `docker stop redis-http redis`, and `docker start redis redis-http` to bring it back.
+
+If push fails, the terminal prints `push failed: ...`: `Connection refused` means the containers aren't running; `401 Unauthorized` means the token doesn't match.
