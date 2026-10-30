@@ -6,3 +6,5 @@ pillow
 streamlit
 wordcloud
 paho-mqtt
+fastapi
+uvicorn[standard]

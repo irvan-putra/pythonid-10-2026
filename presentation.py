@@ -1,12 +1,13 @@
-import tkinter as tk
+import sys, tkinter as tk
+sys.path.insert(0, "laptop")  # the slide modules live in laptop/
 import slide_whisper, slide_yolo, slide_broker, slide_mqtt, slide_streamlit
 
 read = lambda path: open(path, encoding="utf-8").read()
 slides = [
     "Edge AI & Multimodal Applications in Python",
     read(__file__),
-    *map(read, ["slide_whisper.py", "slide_yolo.py", "slide_broker.py", "slide_mqtt.py"]),
-    *map(read, ["phone/sensor_termux.py", "slide_streamlit.py"]),
+    *map(read, ["laptop/slide_whisper.py", "laptop/slide_yolo.py", "laptop/slide_broker.py"]),
+    *map(read, ["laptop/slide_mqtt.py", "phone/termux.py", "laptop/slide_streamlit.py"]),
 ]
 slide = 0
 

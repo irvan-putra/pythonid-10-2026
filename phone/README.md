@@ -6,7 +6,7 @@ Find the laptop's IP with `ipconfig` (Windows) or `ip addr` (Linux/macOS), shown
 
 ## Accelerometer → MQTT → presentation (Sistem Komputer)
 
-`sensor_termux.py` runs on the phone and publishes accelerometer readings to the `pythonid/sensor` topic. The presentation's `slide_broker.py` starts the Mosquitto broker with `mosquitto.conf`, and `slide_mqtt.py` lights the sensor LED while the phone is shaken.
+`termux.py` runs on the phone and publishes accelerometer readings to the `pythonid/sensor` topic. The presentation's `laptop/slide_broker.py` starts the Mosquitto broker with `laptop/mosquitto.conf`, and `laptop/slide_mqtt.py` lights the sensor LED while the phone is shaken.
 
 **Laptop (one time):** install [Mosquitto](https://mosquitto.org/download/). On Windows, if the installer added a Mosquitto service, stop it from an Administrator PowerShell with `net stop mosquitto`: it only accepts connections from the laptop itself, and it holds the port the presentation needs.
 
@@ -19,25 +19,21 @@ pkg install python termux-api
 python -m pip install paho-mqtt
 ```
 
-Copy `sensor_termux.py` to the phone, for example:
+Copy `termux.py` to the phone, for example:
 
 ```bash
-curl -O https://raw.githubusercontent.com/irvan-putra/pythonid-10-2026/main/phone/sensor_termux.py
+curl -O https://raw.githubusercontent.com/irvan-putra/pythonid-10-2026/main/phone/termux.py
 ```
 
 **Each time:** start `python presentation.py` on the laptop, then on the phone:
 
 ```bash
-python sensor_termux.py <laptop-ip>
+python termux.py <laptop-ip>
 ```
 
 ## Phone browser setup (for the camera and mic pages)
 
-The camera and mic pages run in the phone's browser, served by the laptop, so no app is needed. Install their packages once, from this folder:
-
-```bash
-python -m pip install -r requirements.txt
-```
+The camera and mic pages run in the phone's browser, served by the laptop from the `laptop/` folder, so no app is needed. Their packages come with the main `requirements.txt`. Run the commands below from the project folder.
 
 Phone browsers only allow the camera and microphone on secure pages (`https://` or `localhost`), even on your own Wi-Fi. Pick one way:
 
@@ -51,20 +47,20 @@ Run one server at a time, since both use the same port.
 
 ## Camera → WebSocket → YOLO (Teknik Informatika)
 
-`camera.html` shows the phone's back camera and sends a JPEG frame over a WebSocket. `camera.py` runs YOLO pose on it, shows the result in a window on the laptop, and replies with the people count; then the phone sends the next frame.
+`laptop/camera.html` shows the phone's back camera and sends a JPEG frame over a WebSocket. `laptop/camera.py` runs YOLO pose on it, shows the result in a window on the laptop, and replies with the people count; then the phone sends the next frame.
 
 ```bash
-python -m uvicorn camera:app --host 0.0.0.0 --port 8000
+python -m uvicorn laptop.camera:app --host 0.0.0.0 --port 8000
 ```
 
 On the phone, open `http://<laptop-ip>:8000` and tap **📷 Start**.
 
 ## Mic → WebSocket → Whisper
 
-`mic.html` streams the phone's microphone over a WebSocket. `mic.py` runs Whisper on each 2 seconds of audio, prints what it heard, and sends it back to the phone, marking **NEXT** or **BACK** when you say "next" or "back".
+`laptop/mic.html` streams the phone's microphone over a WebSocket. `laptop/mic.py` runs Whisper on each 2 seconds of audio, prints what it heard, and sends it back to the phone, marking **NEXT** or **BACK** when you say "next" or "back".
 
 ```bash
-python -m uvicorn mic:app --host 0.0.0.0 --port 8000
+python -m uvicorn laptop.mic:app --host 0.0.0.0 --port 8000
 ```
 
 On the phone, open `http://<laptop-ip>:8000` and tap **🎙 Start**.

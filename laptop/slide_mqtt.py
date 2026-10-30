@@ -15,7 +15,7 @@ sender.loop_start()
 def publish(topic, data, retain=False):  # retain: broker keeps the last one for new subscribers
     sender.publish(f"pythonid/{topic}", json.dumps(data), retain=retain)
 
-# Phone accelerometer -> MQTT -> Python (phone side: phone/sensor_termux.py)
+# Phone accelerometer -> MQTT -> Python (phone side: phone/termux.py)
 def on_message(client, led, msg):
     reading = json.loads(msg.payload)
     x, y, z = reading["x"], reading["y"], reading["z"]
