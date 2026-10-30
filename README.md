@@ -17,7 +17,7 @@ The Streamlit voting dashboard is deployed at **https://pythonid-10-2026.streaml
 - **People / Votes** with the record so far, **Approval** (hands ÷ people) as a percentage and progress bar, and **Reaction** time (seconds from the start of the current slide to its peak in hands)
 - **Energy** area chart of people and hands over the last 10 minutes, shared by every viewer
 - **Hands up vs. down** split and **left vs. right hand** counts (handy for two-option polls)
-- **Votes per slide** (most hands seen on each slide) and a **room map** of which third of the room is raising hands
+- **Votes per slide** (most hands seen on each slide)
 - **Top words** spoken, from the live Whisper transcript
 
 ## Quick Start
@@ -40,9 +40,9 @@ The deployed app runs on Streamlit Community Cloud, which can't see `votes.txt` 
 Laptop (YOLO + Whisper + slides) --LPUSH history / SET live--> Upstash Redis <--LRANGE history / GET live (every 1s)-- pythonid-10-2026.streamlit.app
 ```
 
-- `presentation_yolo.py` calls `presentation_redis.push(people)` from its detection thread with one `[x, left_hand_up, right_hand_up]` entry per person. Pushes are throttled to one per second (one pipelined HTTP request) so they don't slow down the webcam loop.
+- `presentation_yolo.py` calls `presentation_redis.push(people)` from its detection thread with one `(left_hand_up, right_hand_up)` entry per person. Pushes are throttled to one per second (one pipelined HTTP request) so they don't slow down the webcam loop.
 - `presentation.py` records the current slide and `presentation_whisper.py` counts transcribed words in `presentation_redis.live` / `presentation_redis.words`; both ride along with each push.
-- Redis keeps two keys: `history`, a list of the last 600 one-second snapshots (10 minutes), and `live`, the latest room positions, top words and most hands per slide.
+- Redis keeps two keys: `history`, a list of the last 600 one-second snapshots (10 minutes), and `live`, the top words and most hands per slide.
 - The dashboard wraps `presentation_redis.read()` in `st.cache_data(ttl=1)`. All audience sessions share one Redis read per second, which keeps usage well inside the free tier.
 - If the Upstash variables aren't set, everything falls back to local `votes.txt` (history) and `live.json` files, so offline use still works. Delete an old `votes.txt` from before this change, as its format is different.
 

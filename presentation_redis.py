@@ -12,11 +12,11 @@ def push(people):
     global last_push
     if time.time() - last_push < 1:
         return
-    last_push, xs = time.time(), [x for x, l, r in people if l or r]
-    row = json.dumps({"t": last_push, "slide": live["slide"], "people": len(people), "hands": len(xs),
-                      "left": sum(p[1] for p in people), "right": sum(p[2] for p in people)})
-    live["slides"][live["slide"]] = max(live["slides"].get(live["slide"], 0), len(xs))
-    now = json.dumps({**live, "xs": xs, "words": words.most_common(15)})
+    last_push, hands = time.time(), sum(1 for l, r in people if l or r)
+    row = json.dumps({"t": last_push, "slide": live["slide"], "people": len(people), "hands": hands,
+                      "left": sum(l for l, r in people), "right": sum(r for l, r in people)})
+    live["slides"][live["slide"]] = max(live["slides"].get(live["slide"], 0), hands)
+    now = json.dumps({**live, "words": words.most_common(15)})
     try:
         if URL:
             redis(["LPUSH", "history", row], ["LTRIM", "history", "0", "599"], ["SET", "live", now])

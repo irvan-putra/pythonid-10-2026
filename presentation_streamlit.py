@@ -26,9 +26,7 @@ if __name__ == "__main__":
         a, b = st.columns(2)
         a.bar_chart(pd.DataFrame([{"✋ Up": now["hands"], "🙅 Down": now["people"] - now["hands"]}], index=["Room"]), horizontal=True)
         b.bar_chart({"⬅ Left hand": now["left"], "Right hand ➡": now["right"]}, y_label="Hands", sort=False)
-        a.bar_chart(pd.Series(live["slides"], dtype=int), x_label="Slide", y_label="Most hands")
-        zones = pd.cut(pd.Series(live["xs"], dtype=float), [0, 1 / 3, 2 / 3, 1], labels=["⬅ Left", "Center", "Right ➡"], include_lowest=True)
-        b.bar_chart(zones.value_counts().sort_index(), x_label="Room zone (camera view)", y_label="Hands", sort=False)
+        st.bar_chart(pd.Series(live["slides"], dtype=int), x_label="Slide", y_label="Most hands")
         st.bar_chart(pd.Series(dict(live["words"]), dtype=int), horizontal=True, x_label="Times spoken", sort=False)
 
     live_charts()
