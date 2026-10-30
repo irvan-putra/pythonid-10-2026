@@ -2,8 +2,8 @@ A cross-border research group
 =============================
 
 After university, an independent team formed:
-- 2 former Traveloka colleagues, now in Australia
-- 2 former Bukalapak colleagues, in Indonesia
+- 2 former Traveloka Indonesia colleagues, now living in Australia
+- 2 former Bukalapak colleagues, still in Indonesia
 
 Working asynchronously across time zones, we co-authored and
 published two research papers: EdgePrompt and FitRAG.

@@ -5,7 +5,7 @@ Jupyter Notebooks      prototype step by step, with live charts
                        -> a standard Python environment, on your laptop
 
 Google Colab, Kaggle   train and fine-tune models in the cloud
-                       -> free T4 / P100 GPUs and TPUs, competitions
+                       -> some free GPUs and TPUs, competitions
 
 Hugging Face           find and download open-source models
                        -> Whisper, Llama, Phi, GGUF for Ollama...

@@ -25,7 +25,7 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
 | 4 | `slides/slide_4_mqtt_vs_coap.md` | MQTT vs CoAP: two ways to talk IoT |
 | 4 | `slides/slide_4_broker.py` | The "Waiting for phone..." line: the laptop runs a local [Mosquitto](https://mosquitto.org/download/) MQTT broker, started with the presentation and stopped when the window closes |
 | 5 | `slides/slide_5_mosquitto.conf` | The broker config that lets the phone on the same Wi-Fi connect |
-| 6 | `slides/slide_6_mqtt.py` | MQTT helpers (`listen`, `publish`) and the sensor LED: shaking the phone turns it red |
+| 6 | `slides/slide_6_mqtt.py` | MQTT helpers (`listen`, `publish`) and the phone's force reading: shaking the phone turns it red |
 | 7 | `slides/slide_7_termux.md` | What is Termux? |
 | 7 | `slides/slide_7_termux.py` | Runs on the phone in Termux and publishes its accelerometer to the broker |
 | 8 | `slides/slide_8_websocket.md` | FastAPI and WebSockets |
@@ -54,7 +54,7 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
                                   laptop: Mosquitto                 internet: broker.hivemq.com
 Laptop or phone camera ──► YOLO ──► pythonid/votes   +  irvan-putra/pythonid-10-2026/votes  ──► dashboards
 Laptop or phone mic ──► Whisper ──► pythonid/speech  +  irvan-putra/pythonid-10-2026/speech ──► word clouds
-Phone accelerometer (Termux) ─────► pythonid/sensor  ──► sensor LED in the presentation (stays on the laptop)
+Phone accelerometer (Termux) ─────► pythonid/sensor  ──► phone force in the presentation (stays on the laptop)
 ```
 
 ## Setup (one time)
@@ -93,7 +93,7 @@ Phone accelerometer (Termux) ─────► pythonid/sensor  ──► senso
    python presentation.py
    ```
    This opens the slides and starts the Mosquitto broker, the phone server (port 8000) and a local copy of the dashboard at http://localhost:8501. Find the laptop's IP for the phone with `ipconfig` (IPv4 Address).
-3. **Slides 4–7 (MQTT):** on the phone, in Termux, run the script with the laptop's IP, then shake the phone to turn the LED red:
+3. **Slides 4–7 (MQTT):** on the phone, in Termux, run the script with the laptop's IP, then shake the phone: its force reading turns red:
    ```bash
    python slide_7_termux.py <laptop-ip>
    ```
@@ -104,9 +104,18 @@ Phone accelerometer (Termux) ─────► pythonid/sensor  ──► senso
 ### Controls
 
 - **Left / Right Arrow Keys**: change slides
+- **T**: restart the timer when the talk actually begins
 - **"next" / "back"**: say it into the laptop or phone mic to change slides
 - **Raise your hand** in front of the camera: counts as a vote, shown on the laptop and the dashboard
-- **Shake the phone**: lights the sensor LED
+- **Shake the phone**: its force reading turns red
+
+### Timer
+
+`timer.py` shows a timer under the file name: time elapsed out of 45 minutes, time on the current slide, how far ahead or behind the plan you are (red when more than a minute behind), and the time left. The plan follows the agenda: the demos start at the bio (0 min), the community story at 12, the research at 22 and the toolkit at 35, with the time spread evenly over the slides in each part. Change `PLAN` and `TOTAL` in `timer.py` to adjust it.
+
+### Showing the phone's screen
+
+To let the audience see Termux or the phone page, mirror the phone on the laptop with [scrcpy](https://github.com/Genymobile/scrcpy) (free and open source): turn on **USB debugging** in the phone's Developer options, connect it by USB, and run `scrcpy.exe` from the Windows release zip.
 
 ## 📊 Live Dashboard
 
@@ -131,7 +140,7 @@ A public broker has no password: anyone can read these topics, or publish to the
 
 ## Troubleshooting
 
-- **The LED stays on "Waiting for phone...":** the Mosquitto Windows service may still be running (`net stop mosquitto`), the IP may be wrong, or the phone may be on another Wi-Fi. If the terminal says `Mosquitto not found`, install it.
+- **The force reading stays on "Waiting for the phone...":** the Mosquitto Windows service may still be running (`net stop mosquitto`), the IP may be wrong, or the phone may be on another Wi-Fi. If the terminal says `Mosquitto not found`, install it.
 - **The phone page's Start button does nothing:** the address in the Chrome flag must match the address bar exactly (`http://`, the IP and `:8000`).
 - **The phone page says `Error: Permission denied`:** check that Chrome **⋮ → Settings → Site settings → Camera** and **Microphone** are on, that Android **Settings → Apps → Chrome → Permissions** allows both, and on Samsung that **Camera access** and **Mic access** are on in Quick Settings. Then reopen the page and tap **Allow**.
 - **The phone can't open the phone page:** check the firewall prompt and that the Wi-Fi is set to **Private**.

@@ -3,7 +3,7 @@ How community built our research team
 
   Code4Nation Indonesia, Python Indonesia
     └─ local developer community: the first network
-        └─ Traveloka and Bukalapak
+        └─ Traveloka, Bukalapak, Feedloop, Pashouses
             └─ working with engineers across big tech platforms
                 └─ BuildClub.ai
                     └─ reconnecting with Jonathan Kurniawan,

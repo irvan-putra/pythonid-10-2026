@@ -1,4 +1,4 @@
-import sys, pathlib, importlib, tkinter as tk
+import sys, pathlib, importlib, tkinter as tk, timer
 
 sys.path.insert(0, "slides")
 repo = "github.com/irvan-putra\n/pythonid-10-2026\n/blob/main/\n"
@@ -14,6 +14,7 @@ panel = tk.Frame(root)
 panel.pack(side="right", padx=20)
 filename = tk.Label(panel, font=("Consolas", 12, "bold"))
 filename.pack()
+timer.start(panel, slides, lambda: slide)
 
 def go(step=0):
     global slide

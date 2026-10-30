@@ -15,15 +15,16 @@ sender.loop_start()
 def publish(topic, data, retain=False):
     sender.publish(f"pythonid/{topic}", json.dumps(data), retain=retain)
 
-def on_message(client, led, msg):
+def on_message(client, label, msg):
     reading = json.loads(msg.payload)
     x, y, z = reading["x"], reading["y"], reading["z"]
     force = math.sqrt(x * x + y * y + z * z)
-    color = "red" if force > 15 else "gray"
-    led.after(0, led.config, {"fg": color, "text": f"● Phone: {force:4.1f} m/s²"})
+    shaken = force > 15
+    text = f"📱 Phone force: {force:4.1f} m/s²" + (" shaken!" if shaken else "")
+    label.after(0, label.config, {"fg": "red" if shaken else "gray", "text": text})
 
 def start(root, go):
     import tkinter as tk
-    led = tk.Label(root, text="● Waiting for phone...", font=("Consolas", 12), fg="gray")
-    led.pack(pady=5)
-    listen(["sensor"], on_message, led)
+    label = tk.Label(root, text="📱 Waiting for the phone...", font=("Consolas", 12), fg="gray")
+    label.pack(pady=5)
+    listen(["sensor"], on_message, label)

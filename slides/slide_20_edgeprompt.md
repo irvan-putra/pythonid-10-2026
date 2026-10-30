@@ -16,4 +16,4 @@ How, in three parts:
 A multi-stage verification workflow keeps safety boundaries
 while preserving what the model can do.
 
-First deployment: Grade 5 language instruction.
+Proposed first deployment: Bahasa Indonesia & English class.
