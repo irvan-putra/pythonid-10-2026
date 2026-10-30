@@ -48,6 +48,7 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
 | 21 | `slides/slide_21_fitrag.md` | FitRAG: RAG that learns from feedback |
 | 22 | `slides/slide_22_toolkit.md` | Free tools to start building today |
 | 23 | `slides/slide_23_thanks.md` | Thanks, questions and links |
+| 23 | `slides/slide_23_thanks_qr.png` | QR code for this repository, github.com/irvan-putra/pythonid-10-2026 |
 
 ```
                                   laptop: Mosquitto                 internet: broker.hivemq.com
