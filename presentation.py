@@ -3,11 +3,11 @@ import presentation_whisper, presentation_yolo, presentation_streamlit, presenta
 
 slides = [
     "Edge AI & Multimodal Applications in Python",
-    open(__file__).read(),
-    open("presentation_whisper.py").read(),
-    open("presentation_yolo.py").read(),
-    open("presentation_streamlit.py").read(),
-    open("presentation_redis.py").read(),
+    open(__file__, encoding="utf-8").read(),
+    open("presentation_whisper.py", encoding="utf-8").read(),
+    open("presentation_yolo.py", encoding="utf-8").read(),
+    open("presentation_streamlit.py", encoding="utf-8").read(),
+    open("presentation_redis.py", encoding="utf-8").read(),
 ]
 i = 0
 
