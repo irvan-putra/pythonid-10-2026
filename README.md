@@ -30,6 +30,10 @@ python presentation.py
 - **Voice Commands**: Say **"next"** or **"back"** into your microphone
 - **Raise Hand in Webcam**: Increments the live raised-hand vote count in Tkinter and the Streamlit dashboard
 
+## Experiments
+
+The [`experiments/`](experiments/) folder has standalone scripts for using a smartphone as the sensor over local Wi-Fi: accelerometer over MQTT, camera into YOLO, and microphone over a WebSocket into Whisper.
+
 ## Pushing Votes from the Laptop to the Deployed Dashboard
 
 The deployed app runs on Streamlit Community Cloud, which can't reach the presenter's laptop and can't receive incoming requests. So both sides talk to a small shared key-value store, a free [Upstash Redis](https://upstash.com) database, through its REST API:

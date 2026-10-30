@@ -9,3 +9,4 @@ build-apk.ps1
 hello_world.py
 investor_pitch_deck.py
 edge_ai_presentation.py
+*.pem

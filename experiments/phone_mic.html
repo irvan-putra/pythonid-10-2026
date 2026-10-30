@@ -1,0 +1,18 @@
+<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phone Mic</title>
+<button id="start" style="font-size: 2em">🎙 Start</button>
+<p id="heard" style="font-size: 1.5em"></p>
+<script>
+start.onclick = async () => {
+  const ws = new WebSocket(`wss://${location.host}/audio`);
+  ws.onmessage = (event) => (heard.textContent = event.data);
+  const ctx = new AudioContext({ sampleRate: 16000 });
+  const mic = ctx.createMediaStreamSource(await navigator.mediaDevices.getUserMedia({ audio: true }));
+  const tap = ctx.createScriptProcessor(4096, 1, 1);
+  tap.onaudioprocess = (event) => ws.readyState === 1 && ws.send(event.inputBuffer.getChannelData(0));
+  mic.connect(tap);
+  tap.connect(ctx.destination);
+  start.disabled = true;
+};
+</script>
