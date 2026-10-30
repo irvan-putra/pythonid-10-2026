@@ -1,5 +1,10 @@
-import pandas as pd, streamlit as st, slide_15_subscribe as subscribe
+import atexit, subprocess, sys, pandas as pd, streamlit as st, slide_15_subscribe as subscribe
 from wordcloud import WordCloud
+
+def start(root, go):
+    local = ["--server.headless", "true", __file__, "--", "--local"]
+    dashboard = subprocess.Popen([sys.executable, "-m", "streamlit", "run", *local])
+    atexit.register(dashboard.terminate)
 
 if __name__ == "__main__":
     @st.fragment(run_every=1)

@@ -34,7 +34,7 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
 | 14 | `slides/slide_14_streamlit.md` | What is Streamlit? From raw events to a dashboard |
 | 14 | `slides/slide_14_publish.py` | Wraps Whisper's `show()` and YOLO's `update()` to also publish the transcript and votes to MQTT |
 | 15 | `slides/slide_15_subscribe.py` | The dashboard's MQTT subscriber on the public broker: keeps one row of votes per second for 10 minutes (Jakarta time), and the transcript |
-| 16 | `slides/slide_16_dashboard.py` | The Streamlit dashboard, hosted on Streamlit Community Cloud |
+| 16 | `slides/slide_16_dashboard.py` | The Streamlit dashboard: hosted on Streamlit Community Cloud for the audience, and started by the presentation on the laptop with `--local` |
 
 ```
                                   laptop: Mosquitto (edge)          internet: broker.hivemq.com (cloud)
@@ -78,14 +78,14 @@ Phone accelerometer (Termux) ─────► pythonid/sensor ──► sensor
    ```bash
    python presentation.py
    ```
-   This opens the slides and starts the Mosquitto broker (bridged to the public broker) and the phone server (port 8000). Find the laptop's IP for the phone with `ipconfig` (IPv4 Address).
+   This opens the slides and starts the Mosquitto broker (bridged to the public broker), the phone server (port 8000) and a local copy of the dashboard at http://localhost:8501. Find the laptop's IP for the phone with `ipconfig` (IPv4 Address).
 3. **Slides 4–7 (MQTT):** on the phone, in Termux, run the script with the laptop's IP, then shake the phone to turn the LED red:
    ```bash
    python slide_7_termux.py <laptop-ip>
    ```
 4. **Slides 8–13 (phone camera and mic):** on the phone, open `http://<laptop-ip>:8000` in Chrome, tap **📷🎙 Start**, and allow the camera and microphone. While it streams, YOLO uses the phone camera and Whisper uses the phone mic; when the phone stops, both go back to the laptop's.
 5. **Slides 14–16 (dashboard):** the audience opens **https://pythonid-10-2026.streamlit.app** on their phones, over their own mobile data or any Wi-Fi.
-6. The slides open full screen. To stop, close them with **Alt+F4**; this also stops Mosquitto and the phone server.
+6. The slides open full screen. To stop, close them with **Alt+F4**; this also stops Mosquitto, the phone server and the local dashboard.
 
 ### Controls
 
@@ -109,7 +109,9 @@ How the data gets there:
 - Whisper publishes the whole transcript so far as a **retained** message. The broker keeps the last one and hands it to any subscriber that connects later, so the word cloud is complete even if the dashboard is first opened mid-talk.
 - The laptop's Mosquitto **bridges** only the votes and speech topics to the free public broker `broker.hivemq.com`, renamed under `irvan-putra/pythonid-10-2026/` so they don't clash with other users. The phone sensor stays on the laptop.
 
-The dashboard is hosted on [Streamlit Community Cloud](https://streamlit.io/cloud) with **`slides/slide_16_dashboard.py`** as its main file; it installs the small [`slides/requirements.txt`](slides/requirements.txt) next to it instead of the full presentation requirements. Open it once before the talk: free apps go to sleep when nobody has used them for a while.
+There are two copies of the same dashboard code. The online one reads the public broker. The one the presentation starts on the laptop gets `--local` and reads the laptop's broker, so it also works without internet; open it at http://localhost:8501.
+
+The online dashboard is hosted on [Streamlit Community Cloud](https://streamlit.io/cloud) with **`slides/slide_16_dashboard.py`** as its main file; it installs the small [`slides/requirements.txt`](slides/requirements.txt) next to it instead of the full presentation requirements. Open it once before the talk: free apps go to sleep when nobody has used them for a while.
 
 A public broker has no password: anyone can read these topics, or publish to them. That's fine for vote counts and the talk's own transcript, but never send private data through it; for that, use a broker with logins, such as a free HiveMQ Cloud account.
 

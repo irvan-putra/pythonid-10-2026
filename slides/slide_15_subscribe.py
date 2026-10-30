@@ -1,6 +1,8 @@
-import json, time, collections, pandas as pd, streamlit as st, paho.mqtt.client as mqtt
+import sys, json, time, collections, pandas as pd, streamlit as st, paho.mqtt.client as mqtt
 
-CLOUD, TOPIC = "broker.hivemq.com", "irvan-putra/pythonid-10-2026/"
+CLOUD = ("broker.hivemq.com", "irvan-putra/pythonid-10-2026/")
+LOCAL = ("localhost", "pythonid/")
+BROKER, TOPIC = LOCAL if "--local" in sys.argv else CLOUD
 
 @st.cache_resource
 def live():
@@ -16,6 +18,6 @@ def live():
     topics = [(TOPIC + "votes", 0), (TOPIC + "speech", 0)]
     client.on_connect = lambda client, *args: client.subscribe(topics)
     client.on_message = on_message
-    client.connect_async(CLOUD)
+    client.connect_async(BROKER)
     client.loop_start()
     return data
