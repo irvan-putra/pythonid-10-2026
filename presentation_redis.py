@@ -22,8 +22,8 @@ def push(people):
             redis(["LPUSH", "history", row], ["LTRIM", "history", "0", "599"], ["SET", "live", now])
         else:
             open("votes.txt", "a").write(row + "\n"), open("live.json", "w").write(now)
-    except Exception:
-        pass
+    except Exception as e:
+        print("push failed:", e, flush=True)
 
 def read():
     if URL:
