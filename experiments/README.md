@@ -3,7 +3,7 @@
 Standalone scripts for trying the phone ideas from the talk plan before they go into the presentation. Run each one on its own, from this folder, with the phone and laptop on the same Wi-Fi or phone hotspot. Nothing here leaves the local network.
 
 ```bash
-pip install -r ../requirements.txt -r requirements.txt
+python -m pip install -r ../requirements.txt -r requirements.txt
 ```
 
 Find the laptop's IP with `ipconfig` (Windows) or `ip addr` (Linux/macOS), shown below as `<laptop-ip>`. Allow Python through the Windows firewall when it asks.
@@ -44,7 +44,7 @@ Run one server at a time, since both use the same port.
 `phone_camera.html` shows the phone's back camera and sends a JPEG frame over a WebSocket; `phone_camera_yolo.py` runs YOLO pose on it, shows the result in a window on the laptop, and replies with the people count, then the phone sends the next frame.
 
 ```bash
-uvicorn phone_camera_yolo:app --host 0.0.0.0 --port 8000
+python -m uvicorn phone_camera_yolo:app --host 0.0.0.0 --port 8000
 ```
 
 On the phone, open `http://<laptop-ip>:8000` and tap **📷 Start**.
@@ -54,7 +54,7 @@ On the phone, open `http://<laptop-ip>:8000` and tap **📷 Start**.
 `phone_mic.html` streams the phone's microphone over a WebSocket. `phone_mic_whisper.py` runs Whisper on each 2 seconds of audio, prints what it heard, and sends it back to the phone, marking **NEXT** or **BACK** when you say "next" or "back".
 
 ```bash
-uvicorn phone_mic_whisper:app --host 0.0.0.0 --port 8000
+python -m uvicorn phone_mic_whisper:app --host 0.0.0.0 --port 8000
 ```
 
 On the phone, open `http://<laptop-ip>:8000` and tap **🎙 Start**.
