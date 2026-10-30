@@ -1,6 +1,6 @@
 import queue, numpy as np, slide_1_whisper as whisper
 from fastapi import WebSocket, WebSocketDisconnect
-from slide_7_sensor import app
+from slide_8_sensor import app
 
 chunks, phone, laptop_record = queue.Queue(), {"connected": False}, whisper.record
 

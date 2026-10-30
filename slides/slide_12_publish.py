@@ -1,4 +1,4 @@
-import slide_1_whisper as whisper, slide_2_yolo as yolo, slide_5_mqtt as mqtt
+import slide_1_whisper as whisper, slide_2_yolo as yolo, slide_6_mqtt as mqtt
 
 laptop_show, laptop_update, transcript = whisper.show, yolo.update, []
 

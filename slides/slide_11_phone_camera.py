@@ -1,6 +1,6 @@
 import time, cv2, numpy as np, slide_2_yolo as yolo
 from fastapi import WebSocket, WebSocketDisconnect
-from slide_7_sensor import app
+from slide_8_sensor import app
 
 class PhoneCamera:
     def __init__(self, webcam):

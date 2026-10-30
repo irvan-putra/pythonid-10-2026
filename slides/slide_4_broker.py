@@ -1,7 +1,7 @@
 import atexit, pathlib, shutil, subprocess
 
 MOSQUITTO = shutil.which("mosquitto") or r"C:\Program Files\mosquitto\mosquitto.exe"
-CONFIG = pathlib.Path(__file__).with_name("slide_4_mosquitto.conf")
+CONFIG = pathlib.Path(__file__).with_name("slide_5_mosquitto.conf")
 
 def start(root, go):
     try:

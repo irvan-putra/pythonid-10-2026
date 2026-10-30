@@ -1,15 +1,21 @@
 import sys, pathlib, importlib, tkinter as tk
 
-sys.path.insert(0, "slides")
-number = lambda path: int(path.name.split("_")[1])
-files = sorted(pathlib.Path("slides").glob("slide_*"), key=number)
-slides = [("presentation.py", open(__file__, encoding="utf-8").read())]
-slides += [(f"slides/{path.name}", path.read_text(encoding="utf-8")) for path in files]
-slide = 0
-
 root = tk.Tk()
 root.title("Edge AI & Multimodal Applications in Python")
 root.geometry("1100x600")
+
+def content(path):
+    if path.suffix == ".png":
+        return "", tk.PhotoImage(file=path)
+    return path.read_text(encoding="utf-8"), ""
+
+sys.path.insert(0, "slides")
+number = lambda path: int(path.name.split("_")[1])
+files = sorted(pathlib.Path("slides").glob("slide_*"), key=number)
+slides = [("presentation.py", open(__file__, encoding="utf-8").read(), "")]
+slides += [(f"slides/{path.name}", *content(path)) for path in files]
+slide = 0
+
 label = tk.Label(root, font=("Consolas", 13), justify="left", anchor="w")
 panel = tk.Frame(root)
 panel.pack(side="right", padx=20)
@@ -19,8 +25,9 @@ filename.pack()
 def go(step=0):
     global slide
     slide = (slide + step) % len(slides)
-    filename.config(text=slides[slide][0])
-    label.config(text=slides[slide][1])
+    name, text, image = slides[slide]
+    filename.config(text=name)
+    label.config(text=text, image=image)
 
 modules = [importlib.import_module(path.stem) for path in files if path.suffix == ".py"]
 for module in modules:
