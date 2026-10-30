@@ -1,30 +1,16 @@
-import json, time, subprocess, sys, collections
-import pandas as pd, streamlit as st, slide_6_mqtt as mqtt
+import subprocess, sys, pandas as pd, streamlit as st, slide_15_subscribe as subscribe
 from wordcloud import WordCloud
 
 def start(root, go):
     subprocess.Popen([sys.executable, "-m", "streamlit", "run", __file__])
 
-@st.cache_resource
-def live():
-    data = {"history": collections.deque(maxlen=60 * 10), "text": "", "last": 0}
-    def on_message(client, userdata, msg):
-        if msg.topic == "pythonid/speech":
-            data["text"] = json.loads(msg.payload)
-        elif time.time() - data["last"] >= 1:
-            data["last"] = time.time()
-            data["history"].append({"time": data["last"], **json.loads(msg.payload)})
-    mqtt.listen(["votes", "speech"], on_message)
-    return data
-
 if __name__ == "__main__":
     @st.fragment(run_every=1)
     def live_charts():
-        data = live()
+        data = subscribe.live()
         if not data["history"]:
             return st.info("⏳ Waiting for votes...")
         history = pd.DataFrame(list(data["history"]))
-        history["time"] = pd.to_datetime(history["time"], unit="s")
         latest = history.iloc[-1]
         approval = latest["hands"] / max(latest["people"], 1)
         c1, c2, c3 = st.columns(3)

@@ -2,42 +2,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Phone Sensor</title>
 <button id="start" style="font-size: 2em">📷🎙 Start</button>
-<p id="info" style="font-size: 1.5em"></p>
+<p id="mic"></p>
+<p id="camera"></p>
 <p id="state" style="color: gray"></p>
 <video id="video" playsinline muted style="width: 100%"></video>
+<script src="slide_11_phone_mic.js"></script>
+<script src="slide_13_phone_camera.js"></script>
 <script>
 const protocol = location.protocol === "https:" ? "wss" : "ws";
 const socket = (path) => new WebSocket(`${protocol}://${location.host}/${path}`);
-
-async function streamCamera(stream) {
-  video.srcObject = stream;
-  await video.play();
-  const ws = socket("camera");
-  const canvas = document.createElement("canvas");
-  const send = () => {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext("2d").drawImage(video, 0, 0);
-    canvas.toBlob((jpeg) => ws.send(jpeg), "image/jpeg", 0.7);
-  };
-  ws.onopen = send;
-  ws.onmessage = (event) => { info.textContent = event.data; send(); };
-}
-
-function streamMic(stream, ctx) {
-  const ws = socket("audio");
-  ws.onclose = () => (state.textContent = "Disconnected from laptop");
-  const mic = ctx.createMediaStreamSource(stream);
-  const tap = ctx.createScriptProcessor(4096, 1, 1);
-  let sent = 0;
-  tap.onaudioprocess = (event) => {
-    const samples = event.inputBuffer.getChannelData(0);
-    if (ws.readyState === 1) ws.send(samples), sent++;
-    state.textContent = `🎙 sent ${sent} mic chunks · level ${Math.max(...samples).toFixed(2)}`;
-  };
-  mic.connect(tap);
-  tap.connect(ctx.destination);
-}
 
 start.onclick = async () => {
   try {

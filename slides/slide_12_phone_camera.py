@@ -5,10 +5,8 @@ from slide_8_sensor import app
 class PhoneCamera:
     def __init__(self, webcam):
         self.webcam, self.frame, self.time = webcam, None, 0
-
     def isOpened(self):
         return True
-
     def read(self):
         while True:
             if self.frame is not None:
