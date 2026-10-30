@@ -4,7 +4,8 @@ if __name__ == "__main__":
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     client.connect(sys.argv[1])
     client.loop_start()
-    command = ["termux-sensor", "-s", "accelerometer", "-d", "50"]  # 50ms delay = 20 readings / second
+    delay = "50"  # 50ms delay = 20 readings / second
+    command = ["termux-sensor", "-s", "accelerometer", "-d", delay]
     sensor = subprocess.Popen(command, stdout=subprocess.PIPE, text=True)
     chunk = ""
     for line in sensor.stdout:
