@@ -1,16 +1,35 @@
-import sys, cv2
+import time, pathlib, threading, cv2, numpy as np
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.responses import FileResponse
 from ultralytics import YOLO
 
-# python phone_camera_yolo.py http://<phone-ip>:8080/video   (IP Webcam app on the phone)
-model, phone = YOLO("yolo11n-pose.pt"), cv2.VideoCapture(sys.argv[1])
-while phone.isOpened():
-    ok, frame = phone.read()
-    if not ok:
-        break
-    result = model(frame, verbose=False)[0]
-    image = result.plot()
-    text = f"People: {len(result.boxes)} | {result.speed['inference']:.0f} ms"
-    cv2.putText(image, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-    cv2.imshow("Phone camera -> YOLO (q to quit)", image)
-    if cv2.waitKey(1) == ord("q"):
-        break
+app, latest = FastAPI(), {"frame": None, "people": 0}
+
+def detect():  # one thread runs YOLO and owns the laptop window
+    model = YOLO("yolo11n-pose.pt")
+    while True:
+        frame, latest["frame"] = latest["frame"], None
+        if frame is None:
+            time.sleep(0.01)
+            continue
+        result = model(frame, verbose=False)[0]
+        latest["people"] = len(result.boxes)
+        cv2.imshow("Phone camera -> YOLO", result.plot())
+        cv2.waitKey(1)
+
+threading.Thread(target=detect, daemon=True).start()
+
+@app.get("/")
+def page():
+    return FileResponse(pathlib.Path(__file__).with_name("phone_camera.html"))
+
+@app.websocket("/camera")
+async def camera(ws: WebSocket):
+    await ws.accept()
+    try:
+        while True:  # the phone sends a JPEG, waits for the reply, then sends the next one
+            jpeg = np.frombuffer(await ws.receive_bytes(), np.uint8)
+            latest["frame"] = cv2.imdecode(jpeg, cv2.IMREAD_COLOR)
+            await ws.send_text(f"👥 {latest['people']} people")
+    except WebSocketDisconnect:
+        print("phone disconnected", flush=True)

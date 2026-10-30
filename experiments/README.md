@@ -27,30 +27,34 @@ Find the laptop's IP with `ipconfig` (Windows) or `ip addr` (Linux/macOS), shown
    python phone_sensor_termux.py <laptop-ip>
    ```
 
-## 2. Phone camera → YOLO (Teknik Informatika)
+## Phone browser setup (for experiments 2 and 3)
 
-Install an IP camera app on the phone, such as **IP Webcam** (Android), and start its server. Then on the laptop:
+Experiments 2 and 3 run in the phone's browser, served by the laptop, so no app is needed. Phone browsers only allow the camera and microphone on secure pages (`https://` or `localhost`), even on your own Wi-Fi. Pick one way:
+
+- **Chrome flag (Android, no certificate):** on the phone open `chrome://flags/#unsafely-treat-insecure-origin-as-secure`, enable it, enter `http://<laptop-ip>:8000`, and tap **Relaunch**. Start the servers below on port 8000 without the `--ssl-...` options.
+- **Self-signed certificate (any phone, including iPhone):** create it once with the command below (on Windows, `openssl` comes with Git Bash), add `--port 8443 --ssl-keyfile key.pem --ssl-certfile cert.pem` to the server command, open `https://<laptop-ip>:8443` and accept the warning.
+  ```bash
+  openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 30 -subj "/CN=pythonid"
+  ```
+
+Run one server at a time, since both use the same port.
+
+## 2. Phone camera → WebSocket → YOLO (Teknik Informatika)
+
+`phone_camera.html` shows the phone's back camera and sends a JPEG frame over a WebSocket; `phone_camera_yolo.py` runs YOLO pose on it, shows the result in a window on the laptop, and replies with the people count, then the phone sends the next frame.
 
 ```bash
-python phone_camera_yolo.py http://<phone-ip>:8080/video
+uvicorn phone_camera_yolo:app --host 0.0.0.0 --port 8000
 ```
 
-The window shows the pose detections, the people count and the inference time per frame. Press `q` to quit.
+On the phone, open `http://<laptop-ip>:8000` and tap **📷 Start**.
 
 ## 3. Phone mic → WebSocket → Whisper (Demo 0)
 
-`phone_mic_whisper.py` serves `phone_mic.html` to the phone, which streams its microphone over a WebSocket. The laptop runs Whisper on each 2 seconds of audio, prints what it heard, and sends it back to the phone, marking **NEXT** or **BACK** when you say "next" or "back".
-
-Phone browsers only allow the microphone on HTTPS pages, so create a self-signed certificate once (on Windows, `openssl` comes with Git Bash):
+`phone_mic.html` streams the phone's microphone over a WebSocket. `phone_mic_whisper.py` runs Whisper on each 2 seconds of audio, prints what it heard, and sends it back to the phone, marking **NEXT** or **BACK** when you say "next" or "back".
 
 ```bash
-openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 30 -subj "/CN=pythonid"
+uvicorn phone_mic_whisper:app --host 0.0.0.0 --port 8000
 ```
 
-Then start the server:
-
-```bash
-uvicorn phone_mic_whisper:app --host 0.0.0.0 --port 8443 --ssl-keyfile key.pem --ssl-certfile cert.pem
-```
-
-On the phone, open `https://<laptop-ip>:8443`, accept the certificate warning, and tap **Start**.
+On the phone, open `http://<laptop-ip>:8000` and tap **🎙 Start**.

@@ -5,7 +5,8 @@
 <p id="heard" style="font-size: 1.5em"></p>
 <script>
 start.onclick = async () => {
-  const ws = new WebSocket(`wss://${location.host}/audio`);
+  const protocol = location.protocol === "https:" ? "wss" : "ws";  // secure page -> secure socket
+  const ws = new WebSocket(`${protocol}://${location.host}/audio`);
   ws.onmessage = (event) => (heard.textContent = event.data);
   const ctx = new AudioContext({ sampleRate: 16000 });
   const mic = ctx.createMediaStreamSource(await navigator.mediaDevices.getUserMedia({ audio: true }));
