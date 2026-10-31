@@ -14,5 +14,5 @@ that can also reach the cloud: phones, gateways, dashboards.
 Pick CoAP for tiny battery-powered sensors on weak networks, talking
 directly to each other: coap://sensor/temperature
 
-This talk uses MQTT: one phone, many receivers, and a free public
-broker for the online dashboard.
+This talk uses MQTT for the phone's accelerometer, and to send the
+votes and transcript to two dashboards, one online via a public broker.

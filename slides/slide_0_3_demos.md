@@ -13,5 +13,6 @@ Demo 2 (Sistem Informasi): live polling dashboard
   -> Analisis Big Data, Visualisasi Data, Kecerdasan Bisnis
 
 Demo 3 (Sistem Komputer): network protocols and interfacing
-  The phone's sensors stream over MQTT to the laptop
+  The phone's accelerometer streams over MQTT, its camera and mic
+  over WebSockets, and the results reach the dashboards over MQTT
   -> Interfacing, Sistem Tertanam, Komunikasi Data
