@@ -1,3 +1,4 @@
+# AI-written demo code. Not everything has been reviewed by Irvan.
 import atexit, pathlib, shutil, subprocess
 
 MOSQUITTO = shutil.which("mosquitto") or r"C:\Program Files\mosquitto\mosquitto.exe"

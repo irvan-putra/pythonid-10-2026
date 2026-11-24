@@ -1,3 +1,4 @@
+// AI-written demo code. Not everything has been reviewed by Irvan.
 function streamMic(stream, actx) {
   const ws = socket("audio");
   ws.onclose = () => (state.textContent = "Disconnected from laptop");

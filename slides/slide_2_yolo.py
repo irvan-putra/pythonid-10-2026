@@ -1,3 +1,4 @@
+# AI-written demo code. Not everything has been reviewed by Irvan.
 import threading, tkinter as tk, cv2
 from PIL import Image, ImageOps, ImageTk
 from ultralytics import YOLO

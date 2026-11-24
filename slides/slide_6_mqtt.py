@@ -1,3 +1,4 @@
+# AI-written demo code. Not everything has been reviewed by Irvan.
 import json, math, paho.mqtt.client as mqtt
 
 def listen(topics, on_message, userdata=None):

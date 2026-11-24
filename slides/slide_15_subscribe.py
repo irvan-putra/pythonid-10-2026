@@ -1,3 +1,4 @@
+# AI-written demo code. Not everything has been reviewed by Irvan.
 import sys, json, time, collections, pandas as pd, streamlit as st, paho.mqtt.client as mqtt
 
 CLOUD = ("broker.hivemq.com", "irvan-putra/pythonid-10-2026/")

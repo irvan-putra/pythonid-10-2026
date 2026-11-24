@@ -1,3 +1,4 @@
+# AI-written demo code. Not everything has been reviewed by Irvan.
 import sys, pathlib, importlib, tkinter as tk, timer
 
 sys.path.insert(0, "slides")

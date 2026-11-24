@@ -1,3 +1,4 @@
+# AI-written demo code. Not everything has been reviewed by Irvan.
 import sys, json, subprocess, paho.mqtt.client as mqtt
 
 if __name__ == "__main__":

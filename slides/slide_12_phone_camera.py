@@ -1,3 +1,4 @@
+# AI-written demo code. Not everything has been reviewed by Irvan.
 import time, cv2, numpy as np, slide_2_yolo as yolo
 from fastapi import WebSocket, WebSocketDisconnect
 from slide_8_sensor import app

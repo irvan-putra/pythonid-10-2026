@@ -43,7 +43,7 @@ Slides 1 and 2 are plain laptop code. Later slides extend them by replacing thei
 | 14 | `slides/slide_14_publish.py` | Wraps Whisper's `show()` and YOLO's `update()` to also publish the transcript and votes, to the laptop's broker and to the public `broker.hivemq.com` |
 | 15 | `slides/slide_15_subscribe.py` | The dashboard's MQTT subscriber on the public broker: keeps one row of votes per second for 10 minutes (Jakarta time), and the transcript |
 | 16 | `slides/slide_16_dashboard.py` | The Streamlit dashboard: hosted on Streamlit Community Cloud for the audience, and started by the presentation on the laptop with `--local` |
-| 17 | `slides/slide_17_architecture.md` | What we just built: the whole pipeline |
+| 17 | `slides/slide_17_architecture.md` | The demo pipeline (AI-written code) |
 | 18 | `slides/slide_18_community.md` | How community built our research team |
 | 19 | `slides/slide_19_research_group.md` | A cross-border research group, and the takeaway |
 | 20 | `slides/slide_20_edgeprompt.md` | EdgePrompt: guardrails for LLMs in K-12 education |
@@ -147,3 +147,9 @@ A public broker has no password: anyone can read these topics, or publish to the
 - **The phone page says `Error: Permission denied`:** check that Chrome **⋮ → Settings → Site settings → Camera** and **Microphone** are on, that Android **Settings → Apps → Chrome → Permissions** allows both, and on Samsung that **Camera access** and **Mic access** are on in Quick Settings. Then reopen the page and tap **Allow**.
 - **The phone can't open the phone page:** check the firewall prompt and that the Wi-Fi is set to **Private**.
 - **The online dashboard stays on "Waiting for votes...":** the laptop needs internet. Check that HiveMQ receives the data in its web client (https://www.hivemq.com/demos/websocket-client/) by subscribing to `irvan-putra/pythonid-10-2026/#`.
+
+## Authorship
+
+The slides and demo code in this repository are AI-written. Irvan confirmed their AI-generated origin on 24 November 2026. This is an authorship disclosure, not a claim that he reviewed every file.
+
+Built with AI assistance (Instinct and others). Not everything has been reviewed by Irvan.

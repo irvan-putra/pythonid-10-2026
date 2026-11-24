@@ -1,3 +1,4 @@
+# AI-written demo code. Not everything has been reviewed by Irvan.
 import threading, tkinter as tk, sounddevice as sd
 from faster_whisper import WhisperModel
 

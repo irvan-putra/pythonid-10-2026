@@ -1,3 +1,4 @@
+# AI-written demo code. Not everything has been reviewed by Irvan.
 import queue, numpy as np, slide_1_whisper as whisper
 from fastapi import WebSocket, WebSocketDisconnect
 from slide_8_sensor import app

@@ -1,3 +1,4 @@
+# AI-written demo code. Not everything has been reviewed by Irvan.
 import atexit, subprocess, sys, pandas as pd, streamlit as st, slide_15_subscribe as subscribe
 from wordcloud import WordCloud
 

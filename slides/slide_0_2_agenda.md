@@ -13,3 +13,6 @@ Edge AI & Multimodal Applications in Python
 
 Everything in this talk is on GitHub, and every slide is a file:
 github.com/irvan-putra/pythonid-10-2026
+
+Authorship: slides and demo code are AI-written.
+Built with AI assistance (Instinct and others). Not everything has been reviewed by Irvan.

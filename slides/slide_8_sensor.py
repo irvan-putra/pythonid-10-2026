@@ -1,3 +1,4 @@
+# AI-written demo code. Not everything has been reviewed by Irvan.
 import pathlib, threading, uvicorn
 from fastapi import FastAPI
 from fastapi.responses import FileResponse

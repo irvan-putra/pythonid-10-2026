@@ -1,3 +1,4 @@
+// AI-written demo code. Not everything has been reviewed by Irvan.
 let turn = 0;
 addEventListener("devicemotion", (event) => {
   const { x, y } = event.accelerationIncludingGravity;

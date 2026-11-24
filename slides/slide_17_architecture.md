@@ -1,4 +1,4 @@
-What we just built
+The demo pipeline (AI-written code)
 ==================
 
   laptop or phone mic    ──► Whisper ──► "next" / "back" ──► slides

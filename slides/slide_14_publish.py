@@ -1,3 +1,4 @@
+# AI-written demo code. Not everything has been reviewed by Irvan.
 import json, paho.mqtt.client as paho
 import slide_1_whisper as whisper, slide_2_yolo as yolo, slide_6_mqtt as mqtt
 
