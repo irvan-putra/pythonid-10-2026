@@ -152,4 +152,4 @@ A public broker has no password: anyone can read these topics, or publish to the
 
 The slides and demo code in this repository are AI-written. Irvan confirmed their AI-generated origin on 24 November 2026. This is an authorship disclosure, not a claim that he reviewed every file.
 
-Built with AI assistance (Instinct, Anthropic Claude, Google Gemini and others). Not everything has been reviewed by Irvan.
+Built with AI assistance (Instinct, Anthropic Claude, Google Gemini via Antigravity and others). Not everything has been reviewed by Irvan.
